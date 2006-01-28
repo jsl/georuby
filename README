@@ -1,0 +1,22 @@
+=GeoRuby
+This is GeoRuby 0.0.1. It is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections).
+
+===Available data types
+The following geometric data types are provided :
+- Point
+- Line string
+- Linear ring
+- Polygon
+- Multi point
+- Multi line string
+- Multi polygon
+- Geometry collection
+
+===Input and output
+These geometries can be input and output in WKB/EWKB format (as well as the related HexWKB and HexEWKB formats). Since EWKB and HexEWKB are respectively the canonical binary and ASCII representations of geometries in PostGIS, this functionality can prove useful. Geometries can also be output as WKT/EWKT.
+
+===License
+GeoRuby is released under the MIT license.
+
+===Support
+Any questions, enhancement proposals, bug notifications or corrections can be sent to mailto:guilhem.vellut+georuby@gmail.com.

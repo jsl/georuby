@@ -23,7 +23,7 @@ end
 spec = Gem::Specification::new do |s|
   s.platform = Gem::Platform::RUBY
 
-  s.name = 'geo_ruby'
+  s.name = 'GeoRuby'
   s.version = "0.0.1"
   s.summary = "Ruby data holder for OGC Simple Features"
   s.description = <<EOF

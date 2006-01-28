@@ -15,6 +15,10 @@ The following geometric data types are provided :
 ===Input and output
 These geometries can be input and output in WKB/EWKB format (as well as the related HexWKB and HexEWKB formats). Since EWKB and HexEWKB are respectively the canonical binary and ASCII representations of geometries in PostGIS, this functionality can prove useful. Geometries can also be output as WKT/EWKT.
 
+===Installation
+Just type :
+      gem install GeoRuby
+
 ===License
 GeoRuby is released under the MIT license.
 

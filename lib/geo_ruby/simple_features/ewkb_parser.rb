@@ -142,7 +142,7 @@ module GeoRuby
 
     class UnpackStructure #:nodoc:
       NDR=1
-      XDR=2
+      XDR=0
       def initialize(ewkb)
         @position=0
         @ewkb=ewkb

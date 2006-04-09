@@ -18,6 +18,13 @@ class TestEWKBParser < Test::Unit::TestCase
     assert(point.instance_of?(Point))
     assert_equal(Point.from_x_y(12.4,45.3,123),point)
   end
+
+  def test_point2d_BigEndian
+    @hex_ewkb_parser.parse("00000000014013A035BD512EC7404A3060C38F3669")
+    point = @factory.geometry
+    assert(point.instance_of?(Point))
+    assert_equal(Point.from_x_y(4.906455,52.377953),point)
+  end
   
   def test_point3d
     @hex_ewkb_parser.parse("01010000A07B000000CDCCCCCCCCCC28406666666666A646400000000000000CC0")

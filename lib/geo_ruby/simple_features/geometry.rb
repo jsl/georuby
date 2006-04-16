@@ -82,6 +82,13 @@ module GeoRuby#:nodoc:
         hexewkb_parser.parse(hexewkb)
         factory.geometry
       end
+
+      def self.from_ewkt(ewkt)
+        factory = GeometryFactory::new
+        ewkt_parser= EWKTParser::new(factory)
+        ewkt_parser.parse(ewkt)
+        factory.geometry
+      end
     end
   end
 end

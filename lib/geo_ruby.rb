@@ -8,5 +8,6 @@ require 'geo_ruby/simple_features/multi_line_string'
 require 'geo_ruby/simple_features/multi_polygon'
 require 'geo_ruby/simple_features/geometry_collection'
 require 'geo_ruby/simple_features/ewkb_parser'
+require 'geo_ruby/simple_features/ewkt_parser'
 require 'geo_ruby/simple_features/geometry_factory'
 

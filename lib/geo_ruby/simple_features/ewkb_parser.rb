@@ -37,6 +37,7 @@ module GeoRuby
         @unpack_structure=UnpackStructure::new(ewkb)
         parse_geometry
         @unpack_structure.done
+        @srid=nil
       end
       private
       def parse_geometry
@@ -67,15 +68,15 @@ module GeoRuby
       def parse_geometry_collection
         parse_multi_geometries(GeometryCollection)
       end
-      ##must be corrected : endianness + geometry_type present
+      
       def parse_multi_polygon
         parse_multi_geometries(MultiPolygon)
       end
-      #must be corrected
+      
       def parse_multi_line_string
         parse_multi_geometries(MultiLineString)
       end
-      #must be corrected
+      
       def parse_multi_point
         parse_multi_geometries(MultiPoint)
       end

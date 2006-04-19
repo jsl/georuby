@@ -24,7 +24,7 @@ spec = Gem::Specification::new do |s|
   s.platform = Gem::Platform::RUBY
 
   s.name = 'GeoRuby'
-  s.version = "0.0.3"
+  s.version = "0.0.4"
   s.summary = "Ruby data holder for OGC Simple Features"
   s.description = <<EOF
 GeoRuby is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections)

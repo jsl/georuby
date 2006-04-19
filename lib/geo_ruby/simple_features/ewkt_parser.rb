@@ -43,7 +43,7 @@ module GeoRuby
       private
       def parse_geometry(ewkt)
         scanner = StringScanner.new(ewkt)
-        if scanner.scan(/SRID=(\d+);/) 
+        if scanner.scan(/SRID=(-?\d+);/) 
           @srid = scanner[1].to_i
         else
           #to manage multi geometries : the srid is not present in sub_geometries, therefore we take the srid of the parent ; if it is the parent, we take the default srid

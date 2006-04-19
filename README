@@ -1,5 +1,5 @@
 =GeoRuby
-This is GeoRuby 0.0.3. It is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections).
+This is GeoRuby 0.0.4. It is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections).
 
 ===Available data types
 The following geometric data types are provided :
@@ -20,7 +20,8 @@ Just type :
       gem install GeoRuby
 
 ===Changes since the last version
-Geometries can be input in WKT/EWKT format
+Change of the default SRID when not specified
+Correction of a bug in the EWKT parsing for negative SRIDs
 
 ===License
 GeoRuby is released under the MIT license.

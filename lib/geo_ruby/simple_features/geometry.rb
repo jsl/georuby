@@ -1,7 +1,7 @@
 module GeoRuby#:nodoc:
   module SimpleFeatures
     #arbitrary default SRID
-    DEFAULT_SRID=128
+    DEFAULT_SRID=-1
     #indicates the presence of Z coordinates in EWKB strings
     Z_MASK=0x80000000
     #indicates the presence of M coordinates in EWKB strings. It is not supported at present.

@@ -5,16 +5,17 @@ module GeoRuby
     #Represents a group of points (see Point).
     class MultiPoint < GeometryCollection
       
-      def initialize(srid= DEFAULT_SRID)
-        super(srid)
+      def initialize(srid= DEFAULT_SRID,with_z=false,with_m=false)
+        super(srid,with_z,with_m)
       end
-      
+            
       def binary_geometry_type
         4
       end
+
       #Text representation of a MultiPoint
-      def text_representation(dimension=2)
-        @geometries.collect{|point| point.text_representation(dimension)}.join(",")
+      def text_representation(allow_3d=true,allow_m=true)
+        @geometries.collect{|point| point.text_representation(allow_3d,allow_m)}.join(",")
       end
       #WKT geoemtry type
       def text_geometry_type
@@ -22,16 +23,16 @@ module GeoRuby
       end
 
       #Creates a new multi point from an array of points
-      def self.from_points(points,srid= DEFAULT_SRID)
-        multi_point= MultiPoint::new(srid)
+      def self.from_points(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
+        multi_point= MultiPoint::new(srid,with_z,with_m)
         multi_point.concat(points)
         multi_point
       end
 
       #Creates a new multi point from a list of point coordinates : ((x,y)...(x,y))
-      def self.from_raw_point_sequence(point_sequence,srid= DEFAULT_SRID)
-        multi_point= MultiPoint::new(srid)
-        multi_point.concat(point_sequence.collect {|point| Point.from_coordinates(point,srid)})
+      def self.from_coordinates(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
+        multi_point= MultiPoint::new(srid,with_z,with_m)
+        multi_point.concat(points.collect {|point| Point.from_coordinates(point,srid,with_z,with_m)})
         multi_point
       end
       

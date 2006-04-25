@@ -7,8 +7,8 @@ module GeoRuby
       #the list of points forming the line string
       attr_reader :points
 
-      def initialize(srid= DEFAULT_SRID )
-        super(srid)
+      def initialize(srid= DEFAULT_SRID,with_z=false,with_m=false)
+        super(srid,with_z,with_m)
         @points=[]
       end
       #tests if the line string is closed
@@ -56,6 +56,7 @@ module GeoRuby
       def remove(*slice)
         @points.slice(*slice)
       end
+      
       #Tests the equality of line strings
       def ==(other_line_string)
         if(other_line_string.class != self.class or 
@@ -70,20 +71,22 @@ module GeoRuby
           true
         end
       end
-      
+
       #Binary representation of a line string
-      def binary_representation(dimension=2)
+      def binary_representation(allow_3d=true,allow_m=true)
         rep = [length].pack("V")
-        each {|point| rep << point.binary_representation(dimension) }
+        each {|point| rep << point.binary_representation(allow_3d,allow_m) }
         rep
       end
+      
       #WKB geometry type
       def binary_geometry_type
         2
       end
+
       #Text representation of a line string
-      def text_representation(dimension=2)
-        @points.collect{|point| point.text_representation(dimension) }.join(",") 
+      def text_representation(allow_3d=true,allow_m=true)
+        @points.collect{|point| point.text_representation(allow_3d,allow_m) }.join(",") 
       end
       #WKT geometry type
       def text_geometry_type
@@ -91,16 +94,16 @@ module GeoRuby
       end
       
       #Creates a new line string. Accept an array of points as argument
-      def self.from_points(points,srid=DEFAULT_SRID)
-        line_string = LineString::new(srid)
+      def self.from_points(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
+        line_string = LineString::new(srid,with_z,with_m)
         line_string.concat(points)
         line_string
       end
 
       #Creates a new line string. Accept a sequence of points as argument : ((x,y)...(x,y))
-      def self.from_raw_point_sequence(points,srid=DEFAULT_SRID)
-        line_string = LineString::new(srid)
-        line_string.concat( points.collect{|point_coords| Point.from_coordinates(point_coords,srid)  } )
+      def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
+        line_string = LineString::new(srid,with_z,with_m)
+        line_string.concat( points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z,with_m)  } )
         line_string
       end
 

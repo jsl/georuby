@@ -6,8 +6,8 @@ module GeoRuby
     class GeometryCollection < Geometry
       attr_reader :geometries
 
-      def initialize(srid = DEFAULT_SRID)
-        super(srid)
+      def initialize(srid = DEFAULT_SRID,with_z=false,with_m=false)
+        super(srid,with_z,with_m)
         @geometries = []
       end
       #add a geometry to the collection
@@ -65,27 +65,31 @@ module GeoRuby
           true
         end
       end
+      
       #Binary representation of the collection
-      def binary_representation(dimension=2)
+      def binary_representation(allow_3d=true,allow_m=true)
         rep = [length].pack("V")
-        each {|geometry| rep << geometry.as_binary(dimension,false) }
+        #output the list of geometries without outputting the SRID first and with the same setting regarding Z and M
+        each {|geometry| rep << geometry.as_ewkb(false,allow_3d,allow_m) }
         rep
       end
       #WKB geometry type of the collection
       def binary_geometry_type
         7
       end
+
       #Text representation of a geometry collection
-      def text_representation(dimension=2)
-        @geometries.collect{|geometry| geometry.as_text(dimension,false)}.join(",")
+      def text_representation(allow_3d=true,allow_m=true)
+        @geometries.collect{|geometry| geometry.as_ewkt(false,allow_3d,allow_m)}.join(",")
       end
       #WKT geometry type
       def text_geometry_type
         "GEOMETRYCOLLECTION"
       end
+      
       #creates a new GeometryCollection from an array of geometries
-      def self.from_geometries(geometries,srid=DEFAULT_SRID)
-        geometry_collection = GeometryCollection::new(srid)
+      def self.from_geometries(geometries,srid=DEFAULT_SRID,with_z=false,with_m=false)
+        geometry_collection = GeometryCollection::new(srid,with_z,with_m)
         geometry_collection.concat(geometries)
         geometry_collection
       end

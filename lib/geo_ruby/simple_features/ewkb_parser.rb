@@ -9,6 +9,10 @@ require 'geo_ruby/simple_features/geometry_collection'
 
 module GeoRuby
   module SimpleFeatures
+
+    class EWKBFormatError < StandardError
+    end
+
     #Parses EWKB strings and notifies of events (such as the beginning of the definition of geometry, the value of the SRID...) the factory passed as argument to the constructor.
     #
     #=Example
@@ -35,36 +39,41 @@ module GeoRuby
       def parse(ewkb)
         @factory.reset
         @unpack_structure=UnpackStructure::new(ewkb)
+        @with_z = false
+        @with_m = false
         parse_geometry
         @unpack_structure.done
         @srid=nil
       end
+      
       private
       def parse_geometry
         @unpack_structure.endianness=@unpack_structure.read_byte
         @geometry_type = @unpack_structure.read_uint
-        @dimension=2
-        
+                
         if (@geometry_type & Z_MASK) != 0
-          @dimension=3
+          @with_z=true
           @geometry_type = @geometry_type & ~Z_MASK
         end
         if (@geometry_type & M_MASK) != 0
-          raise StandardError::new("For next version")
+          @with_m=true
+          @geometry_type = @geometry_type & ~M_MASK
         end
         if (@geometry_type & SRID_MASK) != 0
           @srid = @unpack_structure.read_uint
           @geometry_type = @geometry_type & ~SRID_MASK
         else
-          #to manage multi geometries : the srid is not present in sub_geometries, therefore we take the srid of the parent ; if it is the parent, we take the default srid
+          #to manage multi geometries : the srid is not present in sub_geometries, therefore we take the srid of the parent ; if it is the root, we take the default srid
           @srid= @srid || DEFAULT_SRID
         end
+        
         if @parse_options.has_key? @geometry_type
           @parse_options[@geometry_type].call
         else
-          raise StandardError::new("Unknown geometry type")
+          raise EWKBFormatError::new("Unknown geometry type")
         end
       end
+      
       def parse_geometry_collection
         parse_multi_geometries(GeometryCollection)
       end
@@ -80,42 +89,55 @@ module GeoRuby
       def parse_multi_point
         parse_multi_geometries(MultiPoint)
       end
+      
       def parse_multi_geometries(geometry_type)
         @factory.begin_geometry(geometry_type,@srid)
         num_geometries = @unpack_structure.read_uint
         1.upto(num_geometries) { parse_geometry }
-        @factory.end_geometry
+        @factory.end_geometry(@with_z,@with_m)
       end
+      
       def parse_polygon
         @factory.begin_geometry(Polygon,@srid)
         num_linear_rings = @unpack_structure.read_uint
         1.upto(num_linear_rings) {parse_linear_ring}
-        @factory.end_geometry
+        @factory.end_geometry(@with_z,@with_m)
       end
+      
       def parse_linear_ring
         parse_point_list(LinearRing)
       end
+      
       def parse_line_string
         parse_point_list(LineString)
       end
+      
       #used to parse line_strings and linear_rings
       def parse_point_list(geometry_type)
         @factory.begin_geometry(geometry_type,@srid)
         num_points = @unpack_structure.read_uint
         1.upto(num_points) {parse_point}
-        @factory.end_geometry
+        @factory.end_geometry(@with_z,@with_m)
       end
+      
       def parse_point
         @factory.begin_geometry(Point,@srid)
         x = @unpack_structure.read_double
         y = @unpack_structure.read_double
-        if @dimension == 3
+        if ! (@with_z or @with_m) #most common case probably
+          @factory.add_point_x_y(x,y)
+        elsif @with_m and @with_m
+          z = @unpack_structure.read_double
+          m = @unpack_structure.read_double
+          @factory.add_point_x_y_z_m(x,y,z,m)
+        elsif @with_z
           z = @unpack_structure.read_double
           @factory.add_point_x_y_z(x,y,z)
         else
-          @factory.add_point_x_y(x,y)
+          m = @unpack_structure.read_double
+          @factory.add_point_x_y_m(x,y,m)
         end
-        @factory.end_geometry
+        @factory.end_geometry(@with_z,@with_m)
       end
     end
 
@@ -149,27 +171,27 @@ module GeoRuby
         @ewkb=ewkb
       end
       def done
-        raise StandardError::new("Trailing data") if @position != @ewkb.length
+        raise EWKBFormatError::new("Trailing data") if @position != @ewkb.length
       end
       def read_double
         i=@position
         @position += 8
         packed_double = @ewkb[i...@position]
-        raise StandardError::new("Truncated data") if packed_double.nil? or packed_double.length < 8
+        raise EWKBFormatError::new("Truncated data") if packed_double.nil? or packed_double.length < 8
         packed_double.unpack(@double_mark)[0]
       end
       def read_uint
         i=@position
         @position += 4
         packed_uint = @ewkb[i...@position]
-        raise StandardError::new("Truncated data") if packed_uint.nil? or packed_uint.length < 4
+        raise EWKBFormatError::new("Truncated data") if packed_uint.nil? or packed_uint.length < 4
         packed_uint.unpack(@uint_mark)[0]
       end
       def read_byte
         i = @position
         @position += 1
         packed_byte = @ewkb[i...@position]
-        raise StandardError::new("Truncated data") if packed_byte.nil? or packed_byte.length < 1
+        raise EWKBFormatError::new("Truncated data") if packed_byte.nil? or packed_byte.length < 1
         packed_byte.unpack("C")[0]
       end
       def endianness=(byte_order)

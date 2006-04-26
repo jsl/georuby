@@ -37,7 +37,7 @@ module GeoRuby
       end
       #add a 3D point with M to the current geometry
       def add_point_x_y_z_m(x,y,z,m)
-        @geometry_stack.last.set_x_y_z(x,y,z,m)
+        @geometry_stack.last.set_x_y_z(x,y,z)
         @geometry_stack.last.m=m
       end
       #begin a geometry of type +geometry_type+

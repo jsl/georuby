@@ -69,7 +69,7 @@ module GeoRuby
           end
           #change the parsing method : this one really is ugly...
           if @parse_options.has_key?(geom_type) and scanner.scan(/^\((.*)\)$/)
-            @parse_options[to_call].call(scanner[1])
+            @parse_options[geom_type].call(scanner[1])
           else
             raise EWKTFormatError.new("Bad token")
           end

@@ -67,6 +67,8 @@ module GeoRuby
           @srid= @srid || DEFAULT_SRID
         end
         
+        puts @srid.to_s + " " + @with_m.inspect
+        
         if @parse_options.has_key? @geometry_type
           @parse_options[@geometry_type].call
         else
@@ -126,7 +128,7 @@ module GeoRuby
         y = @unpack_structure.read_double
         if ! (@with_z or @with_m) #most common case probably
           @factory.add_point_x_y(x,y)
-        elsif @with_m and @with_m
+        elsif @with_m and @with_z
           z = @unpack_structure.read_double
           m = @unpack_structure.read_double
           @factory.add_point_x_y_z_m(x,y,z,m)

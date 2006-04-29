@@ -36,7 +36,7 @@ module GeoRuby#:nodoc:
         if @with_m and allow_m
           type = type | M_MASK
         end
-        if allow_srid
+        if @srid != DEFAULT_SRID and allow_srid
           type = type | SRID_MASK
           ewkb << [type,@srid].pack("VV")
         else

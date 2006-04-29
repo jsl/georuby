@@ -14,7 +14,7 @@ class TestSimpleFeatures < Test::Unit::TestCase
     geometry = Geometry::new(225)
     assert_equal(225,geometry.srid)
 
-    point = Geometry.from_hexewkb("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
+    point = Geometry.from_hex_ewkb("01010000207B000000CDCCCCCCCCCC28406666666666A64640")
     assert_equal(Point,point.class)
     assert_equal(12.4,point.x)
         

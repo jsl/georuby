@@ -67,21 +67,23 @@ module GeoRuby
       end
       
       #Binary representation of the collection
-      def binary_representation(allow_3d=true,allow_m=true)
+      def binary_representation(allow_z=true,allow_m=true)
         rep = [length].pack("V")
         #output the list of geometries without outputting the SRID first and with the same setting regarding Z and M
-        each {|geometry| rep << geometry.as_ewkb(false,allow_3d,allow_m) }
+        each {|geometry| rep << geometry.as_ewkb(false,allow_z,allow_m) }
         rep
       end
+      
       #WKB geometry type of the collection
       def binary_geometry_type
         7
       end
 
       #Text representation of a geometry collection
-      def text_representation(allow_3d=true,allow_m=true)
-        @geometries.collect{|geometry| geometry.as_ewkt(false,allow_3d,allow_m)}.join(",")
+      def text_representation(allow_z=true,allow_m=true)
+        @geometries.collect{|geometry| geometry.as_ewkt(false,allow_z,allow_m)}.join(",")
       end
+      
       #WKT geometry type
       def text_geometry_type
         "GEOMETRYCOLLECTION"

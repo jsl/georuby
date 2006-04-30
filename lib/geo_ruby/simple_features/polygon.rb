@@ -66,9 +66,9 @@ module GeoRuby
         end
       end
       #binary representation of a polygon, without the headers neccessary for a valid WKB string
-      def binary_representation(force_2d=false,force_no_m=false)
+      def binary_representation(allow_z=true,allow_m=true)
         rep = [length].pack("V")
-        each {|linear_ring| rep << linear_ring.binary_representation(force_2d,force_no_m)}
+        each {|linear_ring| rep << linear_ring.binary_representation(allow_z,allow_m)}
         rep
       end
       #WKB geometry type
@@ -77,8 +77,8 @@ module GeoRuby
       end
       
       #Text representation of a polygon 
-      def text_representation(allow_3d=true,allow_m=true)
-        @rings.collect{|line_string| "(" + line_string.text_representation(allow_3d,allow_m) + ")" }.join(",")
+      def text_representation(allow_z=true,allow_m=true)
+        @rings.collect{|line_string| "(" + line_string.text_representation(allow_z,allow_m) + ")" }.join(",")
       end
       #WKT geometry type
       def text_geometry_type

@@ -12,8 +12,8 @@ module GeoRuby
         6
       end
       #Text representation of a MultiPolygon
-      def text_representation(allow_3d=true,allow_m=true)
-        @geometries.collect{|polygon| "(" + polygon.text_representation(allow_3d,allow_m) + ")"}.join(",")
+      def text_representation(allow_z=true,allow_m=true)
+        @geometries.collect{|polygon| "(" + polygon.text_representation(allow_z,allow_m) + ")"}.join(",")
       end
       #WKT geometry type
       def text_geometry_type

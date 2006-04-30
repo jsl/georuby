@@ -34,9 +34,9 @@ module GeoRuby
         end
       end
       #binary representation of a point. It lacks some headers to be a valid EWKB representation.
-      def binary_representation(allow_3d=true,allow_m=true)
+      def binary_representation(allow_z=true,allow_m=true)
         bin_rep = [@x,@y].pack("EE")
-        bin_rep += [@z].pack("E") if @with_z and allow_3d #Default value so no crash
+        bin_rep += [@z].pack("E") if @with_z and allow_z #Default value so no crash
         bin_rep += [@m].pack("E") if @with_m and allow_m #idem
         bin_rep
       end
@@ -46,9 +46,9 @@ module GeoRuby
       end
       
       #text representation of a point
-      def text_representation(allow_3d=true,allow_m=true)
+      def text_representation(allow_z=true,allow_m=true)
         tex_rep = "#{@x} #{@y}"
-        tex_rep += " #{@z}" if @with_z and allow_3d
+        tex_rep += " #{@z}" if @with_z and allow_z
         tex_rep += " #{@m}" if @with_m and allow_m
         tex_rep
       end

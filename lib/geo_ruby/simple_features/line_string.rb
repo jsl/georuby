@@ -73,9 +73,9 @@ module GeoRuby
       end
 
       #Binary representation of a line string
-      def binary_representation(allow_3d=true,allow_m=true)
+      def binary_representation(allow_z=true,allow_m=true)
         rep = [length].pack("V")
-        each {|point| rep << point.binary_representation(allow_3d,allow_m) }
+        each {|point| rep << point.binary_representation(allow_z,allow_m) }
         rep
       end
       
@@ -85,8 +85,8 @@ module GeoRuby
       end
 
       #Text representation of a line string
-      def text_representation(allow_3d=true,allow_m=true)
-        @points.collect{|point| point.text_representation(allow_3d,allow_m) }.join(",") 
+      def text_representation(allow_z=true,allow_m=true)
+        @points.collect{|point| point.text_representation(allow_z,allow_m) }.join(",") 
       end
       #WKT geometry type
       def text_geometry_type

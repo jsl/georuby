@@ -23,14 +23,14 @@ module GeoRuby#:nodoc:
       end
             
       #Outputs the geometry as an EWKB string.
-      #The +allow_3d+ and +allow_m+ arguments allow the output to include z and m respectively if they are present in the geometry. If these arguments are set to false, z and m are not included, even if they are present in the geometry.
-      def as_ewkb(allow_srid=true,allow_3d=true,allow_m=true)
+      #The +allow_srid+, +allow_z+ and +allow_m+ arguments allow the output to include srid, z and m respectively if they are present in the geometry. If these arguments are set to false, srid, z and m are not included, even if they are present in the geometry. By default, the output string contains all the information in the object.
+      def as_ewkb(allow_srid=true,allow_z=true,allow_m=true)
         ewkb="";
        
         ewkb << 1.chr #little_endian by default
         
         type= binary_geometry_type
-        if @with_z and allow_3d
+        if @with_z and allow_z
           type = type | Z_MASK
         end
         if @with_m and allow_m
@@ -43,7 +43,7 @@ module GeoRuby#:nodoc:
           ewkb << [type].pack("V")
         end
         
-        ewkb << binary_representation(allow_3d,allow_m)
+        ewkb << binary_representation(allow_z,allow_m)
       end
       
       #Outputs the geometry as a strict WKB string.
@@ -52,46 +52,48 @@ module GeoRuby#:nodoc:
       end
 
       #Outputs the geometry as a HexEWKB string. It is almost the same as a WKB string, except that each byte of a WKB string is replaced by its hexadecimal 2-character representation in a HexEWKB string.
-      #Strict HexWKB can be obtained by passing false to all arguments ; use as_hex_wkb directly for this
-      def as_hex_ewkb(allow_srid=true,allow_3d=true,allow_m=true)
+      def as_hex_ewkb(allow_srid=true,allow_z=true,allow_m=true)
         str = ""
-        as_ewkb(allow_srid,allow_3d,allow_m).each_byte {|char| str << sprintf("%02x",char).upcase}
+        as_ewkb(allow_srid,allow_z,allow_m).each_byte {|char| str << sprintf("%02x",char).upcase}
         str
       end
-      #Outputs the geometry as an HexWKB string
+      #Outputs the geometry as a sctict  HexWKB string
       def as_hex_wkb
         as_hex_ewkb(false,false,false)
       end
 
-      #Outputs the geometry as a EWKT string.
-      #WKT output can be obtained for any geometry by passing false to all arguments ; Use directly as_wkt instead for this purpose
-      def as_ewkt(allow_srid=true,allow_3d=true,allow_m=true)
+      #Outputs the geometry as an EWKT string.
+      def as_ewkt(allow_srid=true,allow_z=true,allow_m=true)
         if @srid!=DEFAULT_SRID and allow_srid #the default SRID is not output like in PostGIS
           ewkt="SRID=#{@srid};"
         else
           ewkt=""
         end
         ewkt << text_geometry_type 
-        ewkt << "M" if @with_m and allow_m and (!@with_z or !allow_3d) #to distinguish the M from the Z when there is actually no Z... 
-        ewkt << "(" << text_representation(allow_3d,allow_m) << ")"        
+        ewkt << "M" if @with_m and allow_m and (!@with_z or !allow_z) #to distinguish the M from the Z when there is actually no Z... 
+        ewkt << "(" << text_representation(allow_z,allow_m) << ")"        
       end
+      
       #WKT output
       def as_wkt
         as_ewkt(false,false,false)
       end
-
+      
+      #Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.
       def self.from_ewkb(ewkb)
         factory = GeometryFactory::new
         ewkb_parser= EWKBParser::new(factory)
         ewkb_parser.parse(ewkb)
         factory.geometry
       end
+      #Creates a geometry based on a HexEWKB string
       def self.from_hex_ewkb(hexewkb)
         factory = GeometryFactory::new
         hexewkb_parser= HexEWKBParser::new(factory)
         hexewkb_parser.parse(hexewkb)
         factory.geometry
       end
+      #Creates a geometry based on a EWKT string. Since WKT strings are a subset of EWKT, they are also valid.
       def self.from_ewkt(ewkt)
         factory = GeometryFactory::new
         ewkt_parser= EWKTParser::new(factory)

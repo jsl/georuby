@@ -10,9 +10,10 @@ module GeoRuby
       def binary_geometry_type
         5
       end
+      
       #Text representation of a multi line string
-      def text_representation(allow_3d=true,allow_m=true)
-        @geometries.collect{|line_string| "(" + line_string.text_representation(allow_3d,allow_m) + ")" }.join(",")
+      def text_representation(allow_z=true,allow_m=true)
+        @geometries.collect{|line_string| "(" + line_string.text_representation(allow_z,allow_m) + ")" }.join(",")
       end
       #WKT geometry type
       def text_geometry_type
@@ -25,6 +26,7 @@ module GeoRuby
         multi_line_string.concat(line_strings)
         multi_line_string
       end
+      
       #Creates a new multi line string from sequences of points : (((x,y)...(x,y)),((x,y)...(x,y)))
       def self.from_coordinates(point_sequences,srid=DEFAULT_SRID,with_z=false,with_m=false)
         multi_line_string = MultiLineString::new(srid,with_z,with_m)

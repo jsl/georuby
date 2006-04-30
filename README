@@ -1,5 +1,5 @@
 =GeoRuby
-This is GeoRuby 0.0.4. It is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections).
+This is GeoRuby 0.1.1. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
 
 ===Available data types
 The following geometric data types are provided :
@@ -12,16 +12,21 @@ The following geometric data types are provided :
 - Multi polygon
 - Geometry collection
 
+They can be in 2D, 3DZ, 3DM, and 4D.
+
 ===Input and output
-These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). Since EWKB and HexEWKB are respectively the canonical binary and ASCII representations of geometries in PostGIS, this functionality can prove useful.
+These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). HexEWKB and EWKB are the default form under which geometric data is returned respectively from PostGIS and MySql.
 
 ===Installation
-Just type :
+To install the latest version, just type :
       gem install GeoRuby
 
 ===Changes since the last version
-Change of the default SRID when not specified
-Correction of a bug in the EWKT parsing for negative SRIDs
+- Addition of support for M and Z dimension in the data types, as well as in the EWKB and EWKT parsers.
+- When creating a geometry, the presence of a Z or M dimension must be indicated. By default, the geometry is created in 2D and with a SRID of -1.
+- Suppression of +as_binary+, +as_hex_binary+ and +as_text+. They have been replaced with +as_ewkb+, +as_wkb+, +as_hex_ewkb+, +as_hex_wkb+, +as_ewkt+ and +as_wkt+.
+- Suppression of the static creation methods +from_raw_point_sequence+ (for some geometric types) and +from_raw_point_sequences+ (for other), to build a geometry from a list of point coordinates. They have been replaced by a +from_coordinates+ for all types.
+- The static geometry construction method +from_hexewkb+ has been replaced with +from_hex_ewkb+.
 
 ===License
 GeoRuby is released under the MIT license.

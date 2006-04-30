@@ -48,9 +48,9 @@ module GeoRuby
       end
       #terminates the current geometry
       def end_geometry(with_z=false,with_m=false)
-        geometry=@geometry_stack.pop
-        geometry.with_z=with_z
-        geometry.with_m=with_m
+        @geometry=@geometry_stack.pop
+        @geometry.with_z=with_z
+        @geometry.with_m=with_m
         #add the newly defined geometry to its parent if there is one
         @geometry_stack.last << geometry if !@geometry_stack.empty?
       end

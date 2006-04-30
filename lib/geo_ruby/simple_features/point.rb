@@ -25,12 +25,12 @@ module GeoRuby
         @x=x
         @y=y
       end
-      #tests the equality of the position of points : no test on m
+      #tests the equality of the position of points + m
       def ==(other_point)
         if other_point.class != self.class
           false
         else
-          @x == other_point.x and @y == other_point.y and @z == other_point.z
+          @x == other_point.x and @y == other_point.y and @z == other_point.z and @m == other_point.m
         end
       end
       #binary representation of a point. It lacks some headers to be a valid EWKB representation.

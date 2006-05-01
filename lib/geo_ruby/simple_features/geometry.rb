@@ -14,7 +14,11 @@ module GeoRuby#:nodoc:
     #Objects of class Geometry should not be instantiated.
     class Geometry
       #SRID of the geometry
-      attr_accessor :srid,:with_z,:with_m
+      attr_accessor :srid
+      #Flag indicating if the z ordinate of the geometry is meaningful
+      attr_accessor :with_z
+      #Flag indicating if the m ordinate of the geometry is meaningful
+      attr_accessor :with_m
       
       def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)
         @srid=srid
@@ -57,7 +61,7 @@ module GeoRuby#:nodoc:
         as_ewkb(allow_srid,allow_z,allow_m).each_byte {|char| str << sprintf("%02x",char).upcase}
         str
       end
-      #Outputs the geometry as a sctict  HexWKB string
+      #Outputs the geometry as a strict HexWKB string
       def as_hex_wkb
         as_hex_ewkb(false,false,false)
       end
@@ -74,7 +78,7 @@ module GeoRuby#:nodoc:
         ewkt << "(" << text_representation(allow_z,allow_m) << ")"        
       end
       
-      #WKT output
+      #Outputs the geometry as strict WKT string.
       def as_wkt
         as_ewkt(false,false,false)
       end

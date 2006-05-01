@@ -4,7 +4,7 @@ module GeoRuby
   module SimpleFeatures
     #Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
-      #Coordinates of the point
+      
       attr_accessor :x,:y,:z,:m
       
       def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)
@@ -14,7 +14,7 @@ module GeoRuby
         @z=0.0 #default value : meaningful if with_z
         @m=0.0 #default value : meaningful if with_m
       end
-      #sets all coordinates in one call
+      #sets all coordinates in one call. Use the +m+ accessor to set the m.
       def set_x_y_z(x,y,z)
         @x=x
         @y=y
@@ -81,12 +81,14 @@ module GeoRuby
         point.set_x_y_z(x,y,z)
         point
       end
+      #creates a point from the X, Y and M coordinates
       def self.from_x_y_m(x,y,m,srid=DEFAULT_SRID)
         point= Point::new(srid,false,true)
         point.set_x_y(x,y)
         point.m=m
         point
       end
+      #creates a point from the X, Y, Z and M coordinates
       def self.from_x_y_z_m(x,y,z,m,srid=DEFAULT_SRID)
         point= Point::new(srid,true,true)
         point.set_x_y_z(x,y,z)

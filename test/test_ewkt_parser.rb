@@ -92,7 +92,7 @@ class TestEWKTParser < Test::Unit::TestCase
     assert(polygon.instance_of?(Polygon))
     assert_equal(Polygon.from_coordinates([[[0,0],[4,0],[4,4],[0,4],[0,0]],[[1,1],[3,1],[3,3],[1,3],[1,1]]],256),polygon)
 
-     @ewkt_parser.parse("SRID=256;POLYGON((0 0 2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))")
+     @ewkt_parser.parse("SRID=256;POLYGON( ( 0 0  2,4 0 2,4 4 2,0 4 2,0 0 2),(1 1 2,3 1 2,3 3 2,1 3 2,1 1 2))")
     polygon = @factory.geometry
     assert(polygon.instance_of?(Polygon))
     assert_equal(Polygon.from_coordinates([[[0,0,2],[4,0,2],[4,4,2],[0,4,2],[0,0,2]],[[1,1,2],[3,1,2],[3,3,2],[1,3,2],[1,1,2]]],256,true),polygon)
@@ -112,6 +112,7 @@ class TestEWKTParser < Test::Unit::TestCase
    end
 
    def test_multi_point
+     #Form output by the current version of PostGIS. Future versions will output the one in the specification
     @ewkt_parser.parse("SRID=444;MULTIPOINT(12.4 -123.3,-65.1 123.4,123.55555555 123)")
     multi_point = @factory.geometry
     assert(multi_point.instance_of?(MultiPoint))
@@ -120,6 +121,14 @@ class TestEWKTParser < Test::Unit::TestCase
     assert_equal(444,multi_point[0].srid)
      
      @ewkt_parser.parse("SRID=444;MULTIPOINT(12.4 -123.3 4.5,-65.1 123.4 6.7,123.55555555 123 7.8)")
+     multi_point = @factory.geometry
+     assert(multi_point.instance_of?(MultiPoint))
+     assert_equal(MultiPoint.from_coordinates([[12.4,-123.3,4.5],[-65.1,123.4,6.7],[123.55555555,123,7.8]],444,true),multi_point)
+     assert_equal(444,multi_point.srid)
+     assert_equal(444,multi_point[0].srid)
+
+     #Form in the EWKT specification (from the OGC)
+     @ewkt_parser.parse("SRID=444;MULTIPOINT( ( 12.4   -123.3 4.5 ) , (-65.1 123.4 6.7),(123.55555555 123 7.8))")
      multi_point = @factory.geometry
      assert(multi_point.instance_of?(MultiPoint))
      assert_equal(MultiPoint.from_coordinates([[12.4,-123.3,4.5],[-65.1,123.4,6.7],[123.55555555,123,7.8]],444,true),multi_point)

@@ -363,10 +363,10 @@ class TestSimpleFeatures < Test::Unit::TestCase
   end
   def test_multi_point_text
     multi_point = MultiPoint.from_coordinates([[12.4,-123.3],[-65.1,123.4],[123.55555555,123]],444)
-    assert_equal("SRID=444;MULTIPOINT(12.4 -123.3,-65.1 123.4,123.55555555 123)",multi_point.as_ewkt)
+    assert_equal("SRID=444;MULTIPOINT((12.4 -123.3),(-65.1 123.4),(123.55555555 123))",multi_point.as_ewkt)
 
     multi_point = MultiPoint.from_coordinates([[12.4,-123.3,4.5],[-65.1,123.4,6.7],[123.55555555,123,7.8]],444,true)
-    assert_equal("SRID=444;MULTIPOINT(12.4 -123.3 4.5,-65.1 123.4 6.7,123.55555555 123 7.8)",multi_point.as_ewkt)
+    assert_equal("SRID=444;MULTIPOINT((12.4 -123.3 4.5),(-65.1 123.4 6.7),(123.55555555 123 7.8))",multi_point.as_ewkt)
     
 
   end

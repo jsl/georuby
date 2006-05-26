@@ -13,7 +13,7 @@ end
 
 desc "Generate the documentation"
 Rake::RDocTask::new do |rdoc|
-  rdoc.rdoc_dir = 'doc/'
+  rdoc.rdoc_dir = 'georuby-doc/'
   rdoc.title    = "GeoRuby Documentation"
   rdoc.options << '--line-numbers' << '--inline-source'
   rdoc.rdoc_files.include('README')
@@ -23,11 +23,11 @@ end
 spec = Gem::Specification::new do |s|
   s.platform = Gem::Platform::RUBY
 
-  s.name = 'GeoRuby'
-  s.version = "0.1.1"
+  s.name = 'georuby'
+  s.version = "0.2.1"
   s.summary = "Ruby data holder for OGC Simple Features"
   s.description = <<EOF
-GeoRuby is intended as a holder for data returned from PostGIS queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections)
+GeoRuby is intended as a holder for data returned from PostGIS and MySQL Spatial queries. Therefore, the data model roughly follows the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections)
 EOF
   s.author = 'Guilhem Vellut'
   s.email = 'guilhem.vellut+georuby@gmail.com'

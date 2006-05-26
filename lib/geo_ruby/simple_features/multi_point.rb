@@ -15,7 +15,7 @@ module GeoRuby
 
       #Text representation of a MultiPoint
       def text_representation(allow_z=true,allow_m=true)
-        @geometries.collect{|point| point.text_representation(allow_z,allow_m)}.join(",")
+        "(" + @geometries.collect{|point| point.text_representation(allow_z,allow_m)}.join("),(") + ")"
       end
       #WKT geoemtry type
       def text_geometry_type

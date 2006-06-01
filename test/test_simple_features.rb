@@ -82,6 +82,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(-3.4,point.z)
     assert_equal(15,point.m)
     assert_equal(123,point.srid)
+
+    bbox = Point.from_x_y_z_m(-1.6,2.8,-3.4,15,123).bounding_box
+    assert_equal(2,bbox.length)
+    assert_equal(Point.from_x_y(-1.6,2.8),bbox[0])
+    assert_equal(Point.from_x_y(-1.6,2.8),bbox[1])
   end
 
   def test_point_equal
@@ -174,6 +179,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(3,line_string.length)
     assert_equal(Point.from_x_y_z(12.4,-45.3,123,123),line_string[0])
 
+    bbox = LineString.from_coordinates([[12.4,-45.3,123],[45.4,41.6,333],[4.456,1.0698,987]],123,true).bounding_box
+    assert_equal(2,bbox.length)
+    assert_equal(Point.from_x_y(4.456,-45.3),bbox[0])
+    assert_equal(Point.from_x_y(45.4,41.6),bbox[1])
+    
   end
   
   def test_line_string_equal
@@ -260,7 +270,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(linear_ring1,polygon[0])
     assert_equal(linear_ring2,polygon[1])
 
-
+    bbox = Polygon.from_coordinates([[[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],[[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]]],256,true).bounding_box
+    assert_equal(2,bbox.length)
+    assert_equal(Point.from_x_y(4.456,-45.3),bbox[0])
+    assert_equal(Point.from_x_y(45.4,41.6),bbox[1])
+    
   end
   def test_polygon_equal
     polygon1 = Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
@@ -319,6 +333,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(256,geometry_collection.srid)
     assert_equal(2,geometry_collection.length)
     assert_equal(LineString.from_coordinates([[5.7,12.45],[67.55,54]],256),geometry_collection[1])
+
+    bbox = geometry_collection.bounding_box
+    assert_equal(2,bbox.length)
+    assert_equal(Point.from_x_y(4.67,12.45),bbox[0])
+    assert_equal(Point.from_x_y(67.55,54),bbox[1])
   end
   def test_geometry_collection_equal
     geometry_collection1 = GeometryCollection.from_geometries([Point.from_x_y(4.67,45.4,256),LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)],256)

@@ -10,6 +10,7 @@ require 'geo_ruby/simple_features/geometry_collection'
 module GeoRuby
   module SimpleFeatures
 
+    #Raised when an error in the EWKB string is detected
     class EWKBFormatError < StandardError
     end
 
@@ -20,6 +21,8 @@ module GeoRuby
     # ewkb_parser = EWKBParser::new(factory)
     # ewkb_parser.parse(<EWKB String>)
     # geometry = @factory.geometry
+    #
+    #You can also use directly the static method Geometry.from_ewkb
     class EWKBParser
   
       def initialize(factory)

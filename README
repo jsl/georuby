@@ -1,5 +1,5 @@
 =GeoRuby
-This is GeoRuby 0.1.1. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
+This is GeoRuby 0.2.1. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
 
 ===Available data types
 The following geometric data types are provided :
@@ -15,18 +15,17 @@ The following geometric data types are provided :
 They can be in 2D, 3DZ, 3DM, and 4D.
 
 ===Input and output
-These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). HexEWKB and EWKB are the default form under which geometric data is returned respectively from PostGIS and MySql.
+These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). HexEWKB and WKB are the default form under which geometric data is returned respectively from PostGIS and MySql.
 
 ===Installation
 To install the latest version, just type :
       gem install GeoRuby
 
 ===Changes since the last version
-- Addition of support for M and Z dimension in the data types, as well as in the EWKB and EWKT parsers.
-- When creating a geometry, the presence of a Z or M dimension must be indicated. By default, the geometry is created in 2D and with a SRID of -1.
-- Suppression of +as_binary+, +as_hex_binary+ and +as_text+. They have been replaced with +as_ewkb+, +as_wkb+, +as_hex_ewkb+, +as_hex_wkb+, +as_ewkt+ and +as_wkt+.
-- Suppression of the static creation methods +from_raw_point_sequence+ (for some geometric types) and +from_raw_point_sequences+ (for other), to build a geometry from a list of point coordinates. They have been replaced by a +from_coordinates+ for all types.
-- The static geometry construction method +from_hexewkb+ has been replaced with +from_hex_ewkb+.
+- Correction of the output of the MultiPoint EWKT string to follow the specification, instead of what is shown in the examples (of the specification) and output by PostGIS. For example, the string previously output as MULTIPOINT(123.4 123.5,456.7 678.887) will now be output as MULTIPOINT((123.4 123.5),(456.7 678.887))
+- Modification of the EWKT input to support the correct MultiPoint EWKT format, on top of the previous one. So both MULTIPOINT(123.4 123.5,456.7 678.887) and MULTIPOINT((123.4 123.5),(456.7 678.887)) would be accepted as valid MultiPoint strings.
+- Addition of a +bounding_box+ method on geometries. Return an array of 2 points representing the 2 corners of the box.
+- Geometries that are aggregation of other geometries (line strings, polygons, multi points, multi line strings, multi polygons and geometry collections) can now behave exactly like arrays.
 
 ===License
 GeoRuby is released under the MIT license.

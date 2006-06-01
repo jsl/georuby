@@ -25,6 +25,12 @@ module GeoRuby
         @x=x
         @y=y
       end
+      
+      #Bounding box in 2D. Returns an array of 2 points
+      def bounding_box
+        [Point.from_x_y(@x,@y),Point.from_x_y(@x,@y)] #not too difficult...
+      end
+      
       #tests the equality of the position of points + m
       def ==(other_point)
         if other_point.class != self.class

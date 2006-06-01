@@ -10,46 +10,27 @@ module GeoRuby
         super(srid,with_z,with_m)
         @geometries = []
       end
-      #add a geometry to the collection
-      def <<(geometry)
-        @geometries << geometry
+      
+      #Delegate the unknown methods to the geometries array
+      def method_missing(method_name,*args,&b)
+        @geometries.send(method_name,*args,&b)
       end
-      #add geometries to the collection
-      def concat(geometries)
-        @geometries.concat geometries
+
+      #Bounding box in 2D. Returns an array of 2 points
+      def bounding_box
+        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
+        each do |geometry|
+          bbox = geometry.bounding_box
+          sw = bbox[0]
+          ne = bbox[1]
+          max_y = ne.y if ne.y > max_y
+          min_y = sw.y if sw.y < min_y
+          max_x = ne.x if ne.x > max_x
+          min_x = sw.x if sw.x < min_x 
+        end
+        [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
       end
-      #number of geometries in the collection
-      def length
-        @geometries.length
-      end
-      #gets the nth geometry
-      def [](n)
-        @geometries[n]
-      end
-      #replaces the nth geometry
-      def []=(n,geometry)
-        @geometries[n]=geometry
-      end
-      #iterates over all the geometries
-      def each(&proc)
-        @geometries.each(&proc)
-      end
-      #iterates over all the geometries, passing the index to the bloc
-      def each_index(&proc)
-        @geometries.each_index(&proc)
-      end
-      #inserts geometries at the nth position
-      def insert(n,*geometry)
-        @geometries.insert(n,*geometry)
-      end
-      #index of the geometry
-      def index(geometry)
-        @geometries.index(geometry)
-      end
-      #remove a slice of the collection
-      def remove(*slice)
-        @geometries.slice(*slice)
-      end
+
       #tests the equality of geometry collections
       def ==(other_collection)
         if(other_collection.class != self.class)

@@ -11,46 +11,17 @@ module GeoRuby
         super(srid,with_z,with_m)
         @rings = []
       end
-      #add one to the polygon
-      def <<(ring)
-        @rings << ring
+      
+      #Delegate the unknown methods to the rings array
+      def method_missing(method_name,*args,&b)
+        @rings.send(method_name,*args,&b)
       end
-      #add one or more rings to the polygon
-      def concat(rings)
-        @rings.concat rings
+      
+      #Bounding box in 2D. Returns an array of 2 points
+      def bounding_box
+        @rings[0].bounding_box
       end
-      #number of linear rings in the polygon
-      def length
-        @rings.length
-      end
-      #access the nth linear ring
-      def [](n)
-        @rings[n]
-      end
-      #modifies the value of the nth linear ring
-      def []=(n,ring)
-        @rings[n]=ring
-      end
-      #iterates over the linear rings
-      def each(&proc)
-        @rings.each(&proc)
-      end
-      #iterates over the linear rings, passing their indices to the bloc
-      def each_index(&proc)
-        @rings.each_index(&proc)
-      end
-      #insert linear rings at the nth position
-      def insert(n,*ring)
-        @rings.insert(n,*ring)
-      end
-      #index of the linear_ring
-      def index(ring)
-        @rings.index(ring)
-      end
-      #remove linear rings. Arguments can be of the same type as Array#slice
-      def remove(*slice)
-        @rings.slice(*slice)
-      end
+      
       #tests for other equality. The SRID is not taken into account.
       def ==(other_polygon)
         if other_polygon.class != self.class or

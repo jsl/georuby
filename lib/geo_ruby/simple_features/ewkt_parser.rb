@@ -12,6 +12,7 @@ require 'strscan'
 module GeoRuby
   module SimpleFeatures
 
+    #Raised when an error in the EWKT string is detected
     class EWKTFormatError < StandardError
     end
 
@@ -22,6 +23,8 @@ module GeoRuby
     # ewkt_parser = EWKTParser::new(factory)
     # ewkt_parser.parse(<EWKT String>)
     # geometry = @factory.geometry
+    #
+    #You can also use directly the static method Geometry.from_ewkt
     class EWKTParser
   
       def initialize(factory)

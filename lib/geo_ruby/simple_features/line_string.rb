@@ -11,50 +11,28 @@ module GeoRuby
         super(srid,with_z,with_m)
         @points=[]
       end
+      
+      #Delegate the unknown methods to the points array
+      def method_missing(method_name,*args,&b)
+        @points.send(method_name,*args,&b)
+      end
+      
       #tests if the line string is closed
       def is_closed
         #a bit naive...
         @points.first == @points.last
       end
-      #add a point to the end of the line string
-      def <<(point)
-        @points << point
-      end
-      #add points to the end of the line string
-      def concat(points)
-        @points.concat points
-      end
-      #number of points of the line string
-      def length
-        @points.length
-      end
-      #accesses the nth point in the line string
-      def [](n)
-        @points[n]
-      end
-      #replaces the nth point in the line string
-      def []=(n,point)
-        @points[n]=point
-      end
-      #iterates over the points in the line string
-      def each(&proc)
-        @points.each(&proc)
-      end
-      #iterates over the points, passing their indices to the bloc
-      def each_index(&proc)
-        @points.each_index(&proc)
-      end
-      #inserts points at the nth position
-      def insert(n,*point)
-        @points.insert(n,*point)
-      end
-      #gets the indices of point
-      def index(point)
-        @points.index(point)
-      end
-      #Removes a slice of points
-      def remove(*slice)
-        @points.slice(*slice)
+
+      #Bounding box in 2D. Returns an array of 2 points
+      def bounding_box
+        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
+        each do |point|
+          max_y = point.y if point.y > max_y
+          min_y = point.y if point.y < min_y
+          max_x = point.x if point.x > max_x
+          min_x = point.x if point.x < min_x 
+        end
+        [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
       end
       
       #Tests the equality of line strings

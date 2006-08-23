@@ -26,6 +26,25 @@ module GeoRuby
         @y=y
       end
       
+      #Return the distance between the 2D points (ie taking care only of the x and y coordinates), assuming the points are in projected coordinates. Euclidian distance in whatever unit the x and y ordinates are.
+      def euclidian_distance(point)
+        Math.sqrt((point.x - x)**2 + (point.y - y)**2)
+      end
+
+      #Returns the sperical distance, with a radius of 6471000m, with the haversine law. Assumes x is the lon and y the lat, in radians. Returns the distance in meters by default, although by passing a value to the radius argument, this can be changed.
+      def spherical_distance(point,radius=6371000)
+        dlat = point.y - y
+        dlon = point.x - x
+        a = Math.sin(dlat/2)**2 + Math.cos(point.y) * Math.cos(y) * (Math.sin(dlon/2)**2)
+        c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+        radius * c
+      end
+
+      #Ellipsoidal distance? Not implemented yet. Complicated and don't feel like it today. Check out http://www.movable-type.co.uk/scripts/LatLongVincenty.html for more info. I accept patches...
+      def ellipsoidal_distance(point)
+      end
+      
+      
       #Bounding box in 2D. Returns an array of 2 points
       def bounding_box
         [Point.from_x_y(@x,@y),Point.from_x_y(@x,@y)] #not too difficult...

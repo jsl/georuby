@@ -82,6 +82,16 @@ module GeoRuby#:nodoc:
       def as_wkt
         as_ewkt(false,false,false)
       end
+
+      #outputs the geometry in georss format
+      def as_georss(options = {})
+
+      end
+
+      #outputs the geometry in kml format
+      def as_kml
+
+      end
       
       #Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.
       def self.from_ewkb(ewkb)

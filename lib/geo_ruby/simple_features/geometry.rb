@@ -25,6 +25,16 @@ module GeoRuby#:nodoc:
         @with_z=with_z
         @with_m=with_m
       end
+
+      
+      #to be implemented in subclasses
+      def bounding_box
+      end
+      
+      #Returns an Envelope object for the geometry
+      def envelope
+        Envelope.new(bounding_box,srid,with_z)
+      end
             
       #Outputs the geometry as an EWKB string.
       #The +allow_srid+, +allow_z+ and +allow_m+ arguments allow the output to include srid, z and m respectively if they are present in the geometry. If these arguments are set to false, srid, z and m are not included, even if they are present in the geometry. By default, the output string contains all the information in the object.
@@ -84,13 +94,40 @@ module GeoRuby#:nodoc:
       end
 
       #outputs the geometry in georss format
+      #assumes the geometries are in latlon format, with x as lon and y as lat. Pass :reverse => true for opposite.
       def as_georss(options = {})
-
+        dialect= options[:dialect] || :simple
+        case(dialect)
+        when :simple
+          geom_attr = ""
+          geom_attr += " featuretypetag=\"#{options[:featuretypetag]}\"" if options[:featuretypetag]
+          geom_attr += " relationshiptag=\"#{options[:relationshiptag]}\"" if options[:relationshiptag]
+          geom_attr += " floor=\"#{options[:floor]}\"" if options[:floor]
+          geom_attr += " radius=\"#{options[:radius]}\"" if options[:radius]
+          geom_attr += " elev=\"#{options[:elev]}\"" if options[:elev]
+          georss_simple_representation(options.merge(:geom_attr => geom_attr))
+        when :w3cgeo
+          georss_w3cgeo_representation(options)
+        when :gml
+          georss_gml_representation(options)
+        end
       end
 
-      #outputs the geometry in kml format
-      def as_kml
+      #outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
+      #<tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
+      #it won't be used by GE anyway: clampToGround is the default)
+      def as_kml(options = {})
+        id_attr = ""
+        id_attr = " id=\"#{options[:id]}\"" if options[:id]
 
+        geom_data = ""
+        geom_data += "<extrude>#{options[:extrude]}</extrude>\n" if options[:extrude]
+        geom_data += "<tesselate>#{options[:tesselate]}</tesselate>\n" if options[:tesselate]
+        geom_data += "<altitudeMode>#{options[:altitude_mode]}</altitudeMode>\n" if options[:altitude_mode]
+        
+        allow_z = with_z && (!options[:altitude_mode].nil?) && options[:atitude_mode] != "clampToGround"
+        
+        kml_representation(options.merge(:id_attr => id_attr, :geom_data => geom_data, :allow_z => allow_z))
       end
       
       #Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.

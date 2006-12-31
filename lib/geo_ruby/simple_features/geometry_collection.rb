@@ -16,19 +16,37 @@ module GeoRuby
         @geometries.send(method_name,*args,&b)
       end
 
-      #Bounding box in 2D. Returns an array of 2 points
+      #Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
-        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX
-        each do |geometry|
-          bbox = geometry.bounding_box
-          sw = bbox[0]
-          ne = bbox[1]
-          max_y = ne.y if ne.y > max_y
-          min_y = sw.y if sw.y < min_y
-          max_x = ne.x if ne.x > max_x
-          min_x = sw.x if sw.x < min_x 
+        max_x, min_x, max_y, min_y = -Float::MAX, Float::MAX, -Float::MAX, Float::MAX, -Float::MAX, Float::MAX 
+        if with_z
+          max_z, min_z = -Float::MAX, Float::MAX
+          each do |geometry|
+            bbox = geometry.bounding_box
+            sw = bbox[0]
+            ne = bbox[1]
+            
+            max_y = ne.y if ne.y > max_y
+            min_y = sw.y if sw.y < min_y
+            max_x = ne.x if ne.x > max_x
+            min_x = sw.x if sw.x < min_x 
+            max_z = ne.z if ne.z > max_z
+            min_z = sw.z if sw.z < min_z 
+          end
+          [Point.from_x_y_z(min_x,min_y,min_z),Point.from_x_y_z(max_x,max_y,max_z)]
+        else
+          each do |geometry|
+            bbox = geometry.bounding_box
+            sw = bbox[0]
+            ne = bbox[1]
+            
+            max_y = ne.y if ne.y > max_y
+            min_y = sw.y if sw.y < min_y
+            max_x = ne.x if ne.x > max_x
+            min_x = sw.x if sw.x < min_x 
+          end
+          [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
         end
-        [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
       end
 
       #tests the equality of geometry collections
@@ -68,6 +86,29 @@ module GeoRuby
       #WKT geometry type
       def text_geometry_type
         "GEOMETRYCOLLECTION"
+      end
+
+      #georss simple representation : outputs only the first geometry of the collection
+      def georss_simple_representation(options)#:nodoc: 
+        self[0].georss_simple_representation(options)
+      end
+      #georss w3c representation : outputs the first point of the outer ring
+      def georss_w3cgeo_representation(options)#:nodoc: 
+        self[0].georss_w3cgeo_representation(options)
+      end
+      #georss gml representation : outputs only the first geometry of the collection
+      def georss_gml_representation(options)#:nodoc: 
+        self[0].georss_gml_representation(options)
+      end
+
+      #outputs the geometry in kml format
+      def kml_representation(options = {}) #:nodoc: 
+        result = "<MultiGeometry#{options[:id_attr]}>\n"
+        options[:id_attr] = "" #the subgeometries do not have an ID
+        each do |geometry|
+          result += geometry.kml_representation(options)
+        end
+        result += "</MultiGeometry>\n"
       end
       
       #creates a new GeometryCollection from an array of geometries

@@ -85,8 +85,8 @@ class TestSimpleFeatures < Test::Unit::TestCase
 
     bbox = Point.from_x_y_z_m(-1.6,2.8,-3.4,15,123).bounding_box
     assert_equal(2,bbox.length)
-    assert_equal(Point.from_x_y(-1.6,2.8),bbox[0])
-    assert_equal(Point.from_x_y(-1.6,2.8),bbox[1])
+    assert_equal(Point.from_x_y_z(-1.6,2.8,-3.4),bbox[0])
+    assert_equal(Point.from_x_y_z(-1.6,2.8,-3.4),bbox[1])
   end
 
   def test_point_equal
@@ -192,8 +192,8 @@ class TestSimpleFeatures < Test::Unit::TestCase
 
     bbox = LineString.from_coordinates([[12.4,-45.3,123],[45.4,41.6,333],[4.456,1.0698,987]],123,true).bounding_box
     assert_equal(2,bbox.length)
-    assert_equal(Point.from_x_y(4.456,-45.3),bbox[0])
-    assert_equal(Point.from_x_y(45.4,41.6),bbox[1])
+    assert_equal(Point.from_x_y_z(4.456,-45.3,123),bbox[0])
+    assert_equal(Point.from_x_y_z(45.4,41.6,987),bbox[1])
     
   end
   
@@ -283,8 +283,8 @@ class TestSimpleFeatures < Test::Unit::TestCase
 
     bbox = Polygon.from_coordinates([[[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],[[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]]],256,true).bounding_box
     assert_equal(2,bbox.length)
-    assert_equal(Point.from_x_y(4.456,-45.3),bbox[0])
-    assert_equal(Point.from_x_y(45.4,41.6),bbox[1])
+    assert_equal(Point.from_x_y_z(4.456,-45.3,2.4),bbox[0])
+    assert_equal(Point.from_x_y_z(45.4,41.6,123.1),bbox[1])
     
   end
   def test_polygon_equal
@@ -461,4 +461,27 @@ class TestSimpleFeatures < Test::Unit::TestCase
     
   end
   
+  def test_envelope
+    linear_ring = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256) 
+    polygon = Polygon.from_linear_rings([linear_ring],256)
+    e = polygon.envelope
+    
+    assert_equal(e.lower_corner.class, Point)
+    assert_equal(e.upper_corner.class, Point)
+
+    assert_equal(e.lower_corner.x,4.456)
+    assert_equal(e.lower_corner.y,-45.3)
+    assert_equal(e.upper_corner.x,45.4)
+    assert_equal(e.upper_corner.y,41.6)
+
+    line_string = LineString.from_coordinates([[13.6,-49.3],[45.4,44.6],[14.2,1.09],[13.6,-49.3]],256) 
+    e2 = line_string.envelope
+
+    e3 = e.extend(e2)
+    
+    assert_equal(e3.lower_corner.x,4.456)
+    assert_equal(e3.lower_corner.y,-49.3)
+    assert_equal(e3.upper_corner.x,45.4)
+    assert_equal(e3.upper_corner.y,44.6)
+  end
 end

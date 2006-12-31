@@ -80,7 +80,7 @@ module GeoRuby
       def georss_w3cgeo_representation(options)
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
         
-        "<#{w3cgeo_ns}:lat>#{self[0][0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:lon>#{self[0][0].x}</#{w3cgeo_ns}:lon>\n"
+        "<#{w3cgeo_ns}:lat>#{self[0][0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{self[0][0].x}</#{w3cgeo_ns}:long>\n"
       end
       #georss gml representation
       def georss_gml_representation(options)

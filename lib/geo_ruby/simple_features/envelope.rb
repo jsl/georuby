@@ -65,7 +65,7 @@ module GeoRuby
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
         point = self.center
-        "<#{w3cgeo_ns}:lat>#{point.y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:lon>#{point.x}</#{w3cgeo_ns}:lon>\n"
+        "<#{w3cgeo_ns}:lat>#{point.y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{point.x}</#{w3cgeo_ns}:long>\n"
       end
 
       #georss gml representation

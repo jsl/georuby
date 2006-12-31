@@ -5,6 +5,7 @@ module GeoRuby
     #Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
       
+      
       attr_accessor :x,:y,:z,:m
       #if you prefer calling the coordinates lat and lon
       alias :lon :x
@@ -37,20 +38,72 @@ module GeoRuby
         Math.sqrt((point.x - x)**2 + (point.y - y)**2)
       end
 
-      #Returns the sperical distance, with a radius of 6471000m, with the haversine law. Assumes x is the lon and y the lat, in radians. Returns the distance in meters by default, although by passing a value to the radius argument, this can be changed.
-      def spherical_distance(point,radius=6371000)
-        dlat = point.y - y
-        dlon = point.x - x
-        a = Math.sin(dlat/2)**2 + Math.cos(point.y) * Math.cos(y) * (Math.sin(dlon/2)**2)
+      #Returns the sperical distance in m, with a radius of 6471000m, with the haversine law. Assumes x is the lon and y the lat, in degrees (Changed in version 1.1). The user has to make sure using this distance makes sense (ie she should be in latlon coordinates)
+      def spherical_distance(point,radius=6370997.0)
+        deg_to_rad = 0.0174532925199433
+        
+        radlat_from = lat * deg_to_rad
+        radlat_to = point.lat * deg_to_rad
+        
+        dlat = (point.lat - lat) * deg_to_rad
+        dlon = (point.lon - lon) * deg_to_rad
+ 
+        a = Math.sin(dlat/2)**2 + Math.cos(radlat_from) * Math.cos(radlat_to) * Math.sin(dlon/2)**2
         c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
         radius * c
       end
 
-      #Ellipsoidal distance? Not implemented yet. Complicated and don't feel like it today. Check out http://www.movable-type.co.uk/scripts/LatLongVincenty.html for more info. I accept patches...
-      def ellipsoidal_distance(point)
+      #Ellipsoidal distance in m using Vincenty's formula. Lifted entirely from Chris Veness's code at http://www.movable-type.co.uk/scripts/LatLongVincenty.html and adapted for Ruby. Assumes the x and y are the lon and lat in degrees.
+      #a is the semi-major axis (equatorial radius) of the ellipsoid
+      #b is the semi-minor axis (polar radius) of the ellipsoid
+      #Their values by default are set to the ones of the WGS84 ellipsoid
+      def ellipsoidal_distance(point, a = 6378137.0, b = 6356752.3142)
+        deg_to_rad = 0.0174532925199433
+        
+        f = (a-b) / a
+        l = (point.lon - lon) * deg_to_rad
+        
+        u1 = Math.atan((1-f) * Math.tan(lat * deg_to_rad ))
+        u2 = Math.atan((1-f) * Math.tan(point.lat * deg_to_rad))
+        sinU1 = Math.sin(u1)
+        cosU1 = Math.cos(u1)
+        sinU2 = Math.sin(u2)
+        cosU2 = Math.cos(u2)
+  
+        lambda = l
+        lambdaP = 2 * Math::PI
+        iterLimit = 20
+        
+        while (lambda-lambdaP).abs > 1e-12 && --iterLimit>0
+          sinLambda = Math.sin(lambda)
+          cosLambda = Math.cos(lambda)
+          sinSigma = Math.sqrt((cosU2*sinLambda) * (cosU2*sinLambda) + (cosU1*sinU2-sinU1*cosU2*cosLambda) * (cosU1*sinU2-sinU1*cosU2*cosLambda))
+          
+          return 0 if sinSigma == 0 #coincident points
+          
+          cosSigma = sinU1*sinU2 + cosU1*cosU2*cosLambda
+          sigma = Math.atan2(sinSigma, cosSigma)
+          sinAlpha = cosU1 * cosU2 * sinLambda / sinSigma
+          cosSqAlpha = 1 - sinAlpha*sinAlpha
+          cos2SigmaM = cosSigma - 2*sinU1*sinU2/cosSqAlpha
+          
+          cos2SigmaM = 0 if (cos2SigmaM.nan?) #equatorial line: cosSqAlpha=0
+
+          c = f/16*cosSqAlpha*(4+f*(4-3*cosSqAlpha))
+          lambdaP = lambda
+          lambda = l + (1-c) * f * sinAlpha * (sigma + c * sinSigma * (cos2SigmaM + c * cosSigma * (-1 + 2 * cos2SigmaM * cos2SigmaM)))
+        end
+        return NaN if iterLimit==0 #formula failed to converge
+
+        uSq = cosSqAlpha * (a*a - b*b) / (b*b)
+        a_bis = 1 + uSq/16384*(4096+uSq*(-768+uSq*(320-175*uSq)))
+        b_bis = uSq/1024 * (256+uSq*(-128+uSq*(74-47*uSq)))
+        deltaSigma = b_bis * sinSigma*(cos2SigmaM + b_bis/4*(cosSigma*(-1+2*cos2SigmaM*cos2SigmaM)- b_bis/6*cos2SigmaM*(-3+4*sinSigma*sinSigma)*(-3+4*cos2SigmaM*cos2SigmaM)))
+      
+        b*a_bis*(sigma-deltaSigma)
       end
-      
-      
+
+            
       #Bounding box in 2D/3D. Returns an array of 2 points
       def bounding_box
         unless with_z
@@ -102,7 +155,7 @@ module GeoRuby
       #georss w3c representation
       def georss_w3cgeo_representation(options) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
-        "<#{w3cgeo_ns}:lat>#{y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:lon>#{x}</#{w3cgeo_ns}:lon>\n"
+        "<#{w3cgeo_ns}:lat>#{y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{x}</#{w3cgeo_ns}:long>\n"
       end
       #georss gml representation
       def georss_gml_representation(options) #:nodoc:

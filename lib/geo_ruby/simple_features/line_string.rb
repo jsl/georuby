@@ -93,7 +93,7 @@ module GeoRuby
       #georss w3c representation : outputs the first point of the line
       def georss_w3cgeo_representation(options) #:nodoc: 
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
-        "<#{w3cgeo_ns}:lat>#{self[0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:lon>#{self[0].x}</#{w3cgeo_ns}:lon>\n"
+        "<#{w3cgeo_ns}:lat>#{self[0].y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{self[0].x}</#{w3cgeo_ns}:long>\n"
       end
       #georss gml representation
       def georss_gml_representation(options) #:nodoc: 

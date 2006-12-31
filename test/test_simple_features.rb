@@ -140,10 +140,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
   def test_point_distance
     point1 = Point.from_x_y(0,0)
     point2 = Point.from_x_y(3,4)
-    assert_equal(point1.euclidian_distance(point2),5)
-
-    point2 = Point.from_x_y(Math::PI,0)
-    assert_in_delta(point1.spherical_distance(point2),20015086,1)
+    assert_equal(5,point1.euclidian_distance(point2))
+    
+    assert_in_delta(554058.924,point1.ellipsoidal_distance(point2),0.001)
+         
+    assert_in_delta(555811.68,point1.spherical_distance(point2),0.01)
     
     
   end

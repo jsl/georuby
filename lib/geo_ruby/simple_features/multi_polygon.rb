@@ -8,15 +8,16 @@ module GeoRuby
       def initialize(srid = DEFAULT_SRID,with_z=false,with_m=false)
         super(srid)
       end
-      def binary_geometry_type
+
+      def binary_geometry_type #:nodoc:
         6
       end
       #Text representation of a MultiPolygon
-      def text_representation(allow_z=true,allow_m=true)
+      def text_representation(allow_z=true,allow_m=true) #:nodoc:
         @geometries.collect{|polygon| "(" + polygon.text_representation(allow_z,allow_m) + ")"}.join(",")
       end
       #WKT geometry type
-      def text_geometry_type
+      def text_geometry_type #:nodoc:
         "MULTIPOLYGON"
       end
       

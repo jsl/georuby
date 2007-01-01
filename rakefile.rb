@@ -24,14 +24,14 @@ spec = Gem::Specification::new do |s|
   s.platform = Gem::Platform::RUBY
 
   s.name = 'GeoRuby'
-  s.version = "1.0.0"
+  s.version = "1.1.0"
   s.summary = "Ruby data holder for OGC Simple Features"
   s.description = <<EOF
 GeoRuby is intended as a holder for data returned from PostGIS and MySQL Spatial queries. The data model roughly follows the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections)
 EOF
   s.author = 'Guilhem Vellut'
   s.email = 'guilhem.vellut+georuby@gmail.com'
-  s.homepage = "http://thepochisuperstarmegashow.com"
+  s.homepage = "http://thepochisuperstarmegashow.com/projects"
   
   s.requirements << 'none'
   s.require_path = 'lib'

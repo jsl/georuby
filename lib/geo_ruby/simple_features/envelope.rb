@@ -5,6 +5,7 @@ module GeoRuby
       attr_accessor :lower_corner, :upper_corner
       attr_accessor :srid, :with_z
       
+      #Creates a enw Envelope with +lower_corner+ as the first element of the corners array and +upper_corner+ as the second element
       def initialize(corners, srid = DEFAULT_SRID, with_z = false)
         @lower_corner,@upper_corner = corners
         @srid = srid
@@ -12,7 +13,6 @@ module GeoRuby
       end
 
       #Merges the argument with the current evelope
-      #TODO : if latlon, wraps around. should take the smallest possible envelope
       def extend!(envelope)
         lower_corner.x = [lower_corner.x,envelope.lower_corner.x].min
         lower_corner.y = [lower_corner.y,envelope.lower_corner.y].min
@@ -20,7 +20,9 @@ module GeoRuby
         upper_corner.y = [upper_corner.y,envelope.upper_corner.y].max
         self
       end
-
+      
+      #Merges the argument with the current evelope and sends back a new
+      #envelope without changing the current one
       def extend(envelope)
         e = Envelope.new([Point.from_x_y(lower_corner.x,lower_corner.y),
                           Point.from_x_y(upper_corner.x,upper_corner.y)])
@@ -88,7 +90,7 @@ module GeoRuby
         kml_representation(options.merge(:geom_data => geom_data,:allow_z => allow_z))
       end
       
-      def kml_representation(options = {})
+      def kml_representation(options = {})#:nodoc:
         result = "<LatLonAltBox>\n"
         result += options[:geom_data]
         result += "<north>#{upper_corner.y}</north>\n"

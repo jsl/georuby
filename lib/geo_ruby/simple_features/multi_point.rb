@@ -9,16 +9,16 @@ module GeoRuby
         super(srid,with_z,with_m)
       end
             
-      def binary_geometry_type
+      def binary_geometry_type #:nodoc:
         4
       end
 
       #Text representation of a MultiPoint
-      def text_representation(allow_z=true,allow_m=true)
+      def text_representation(allow_z=true,allow_m=true) #:nodoc:
         "(" + @geometries.collect{|point| point.text_representation(allow_z,allow_m)}.join("),(") + ")"
       end
       #WKT geoemtry type
-      def text_geometry_type
+      def text_geometry_type #:nodoc:
         "MULTIPOINT"
       end
 

@@ -93,8 +93,8 @@ module GeoRuby#:nodoc:
         as_ewkt(false,false,false)
       end
 
-      #outputs the geometry in georss format
-      #assumes the geometries are in latlon format, with x as lon and y as lat. Pass :reverse => true for opposite.
+      #Outputs the geometry in georss format. 
+      #Assumes the geometries are in latlon format, with x as lon and y as lat.
       def as_georss(options = {})
         dialect= options[:dialect] || :simple
         case(dialect)
@@ -113,7 +113,7 @@ module GeoRuby#:nodoc:
         end
       end
 
-      #outputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
+      #Iutputs the geometry in kml format : options are <tt>:id</tt>, <tt>:tesselate</tt>, <tt>:extrude</tt>,
       #<tt>:altitude_mode</tt>. If the altitude_mode option is not present, the Z (if present) will not be output (since
       #it won't be used by GE anyway: clampToGround is the default)
       def as_kml(options = {})

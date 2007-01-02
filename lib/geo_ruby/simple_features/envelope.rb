@@ -24,8 +24,8 @@ module GeoRuby
       #Merges the argument with the current evelope and sends back a new
       #envelope without changing the current one
       def extend(envelope)
-        e = Envelope.new([Point.from_x_y(lower_corner.x,lower_corner.y),
-                          Point.from_x_y(upper_corner.x,upper_corner.y)])
+        e = Envelope.from_points([Point.from_x_y(lower_corner.x,lower_corner.y),
+                          Point.from_x_y(upper_corner.x,upper_corner.y)],srid,with_z)
         e.extend!(envelope)
         e
       end

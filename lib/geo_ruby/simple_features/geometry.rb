@@ -151,6 +151,21 @@ module GeoRuby#:nodoc:
         ewkt_parser.parse(ewkt)
         factory.geometry
       end
+      
+      #sends back a geometry based on the GeoRSS string passed as argument
+      def self.from_georss(georss)
+        georss_parser= GeorssParser::new
+        georss_parser.parse(georss)
+        georss_parser.geometry
+      end
+      
+      #sends back an array: The first element is the goemetry based on the GeoRSS string passed as argument. The second one is the GeoRSSTags (found only with the Simple format)
+      def self.from_georss_with_tags(georss)
+        georss_parser= GeorssParser::new
+        georss_parser.parse(georss,true)
+        [georss_parser.geometry, georss_parser.georss_tags]
+      end
+      
     end
   end
 end

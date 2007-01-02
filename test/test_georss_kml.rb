@@ -7,7 +7,7 @@ include GeoRuby::SimpleFeatures
 
 class TestGeorssKml < Test::Unit::TestCase
 
-  def test_geometry_creation
+  def test_point_creation
     point = Point.from_x_y(3,4)
     
     assert_equal("<georss:point featuretypetag=\"hoyoyo\" elev=\"45.7\">4 3</georss:point>", point.as_georss(:dialect => :simple, :elev => 45.7, :featuretypetag => "hoyoyo").gsub("\n",""))
@@ -64,5 +64,94 @@ class TestGeorssKml < Test::Unit::TestCase
     
     assert_equal("<LatLonAltBox><north>41.6</north><south>-45.3</south><east>45.4</east><west>4.456</west><minAltitude>-5.4</minAltitude><maxAltitude>34</maxAltitude></LatLonAltBox>",e.as_kml.gsub("\n",""))
   end
+
+  def test_point_georss_read
+    #W3CGeo
+    str = "   <geo:lat >12.3</geo:lat >\n\t  <geo:long>   4.56</geo:long> "
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Point)
+    assert_equal(12.3, geom.lat)
+    assert_equal(4.56, geom.lon)
+
+    str = " <geo:Point> \n \t  <geo:long>   4.56</geo:long> \n\t  <geo:lat >12.3</geo:lat > </geo:Point>  "
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Point)
+    assert_equal(12.3, geom.lat)
+    assert_equal(4.56, geom.lon)
+
+    #gml
+    str = " <georss:where> \t\r  <gml:Point  > \t <gml:pos> 4 \t 3 </gml:pos> </gml:Point> </georss:where>"
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Point)
+    assert_equal(4, geom.lat)
+    assert_equal(3, geom.lon)
+
+
+    #simple 
+    str = "<georss:point > 4 \r\t  3 \t</georss:point >"
+    geom  = Geometry.from_georss(str)
+    assert_equal(geom.class, Point)
+    assert_equal(4, geom.lat)
+    assert_equal(3, geom.lon)
+  
+    #simple with tags
+    str = "<georss:point featuretypetag=\"hoyoyo\"  elev=\"45.7\" \n floor=\"2\" relationshiptag=\"puyopuyo\" radius=\"42\" > 4 \n 3 \t</georss:point >"
+    geom,tags = Geometry.from_georss_with_tags(str)
+    assert_equal(geom.class, Point)
+    assert_equal(4, geom.lat)
+    assert_equal(3, geom.lon)
+    assert_equal("hoyoyo",tags.featuretypetag)
+    assert_equal(45.7,tags.elev)
+    assert_equal("puyopuyo",tags.relationshiptag)
+    assert_equal(2,tags.floor)
+    assert_equal(42,tags.radius)
+  end
+
+  def test_line_string_georss_read
+    ls = LineString.from_points([Point.from_lon_lat(12.4,-45.3),Point.from_lon_lat(45.4,41.6)])
+
+    str = "<georss:line > -45.3 12.4 \n \r41.6\t 45.4</georss:line>"
+    geom  = Geometry.from_georss(str)
+    assert_equal(geom.class, LineString)
+    assert_equal(ls ,geom)
+
+    str = "<georss:where><gml:LineString><gml:posList>-45.3 12.4 41.6 45.4</gml:posList></gml:LineString></georss:where>"
+    geom  = Geometry.from_georss(str)
+    assert_equal(geom.class, LineString)
+    assert_equal(ls ,geom)
+
+  end
+
+  def test_polygon_georss_read
+    linear_ring = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]]) 
+    polygon = Polygon.from_linear_rings([linear_ring])
+
+    str = "<hoyoyo:polygon featuretypetag=\"42\"  > -45.3 12.4 41.6 \n\r 45.4 1.0698 \r 4.456 -45.3 12.4 </hoyoyo:polygon>"
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Polygon)
+    assert_equal(polygon, geom)
+
+    str = "<georss:where>\r\t \n  <gml:Polygon><gml:exterior>   <gml:LinearRing><gml:posList> -45.3 \n\r 12.4 41.6 \n\t 45.4 1.0698 4.456 -45.3 12.4</gml:posList></gml:LinearRing></gml:exterior></gml:Polygon></georss:where>"
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Polygon)
+    assert_equal(polygon, geom)
+  end
+
+  def test_envelope_georss_read
+        
+    e = Envelope.from_coordinates([[4.456,-45.3],[45.4,41.6]])
+    
+    str = "<georss:box  >-45.3 4.456 \n41.6 45.4</georss:box>"
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Envelope)
+    assert_equal(e, geom)
+
+    str = "<georss:where><gml:Envelope><gml:LowerCorner>-45.3 \n 4.456</gml:LowerCorner><gml:UpperCorner>41.6 \t\n 45.4</gml:UpperCorner></gml:Envelope></georss:where>"
+    geom = Geometry.from_georss(str)
+    assert_equal(geom.class, Envelope)
+    assert_equal(e, geom)
+
+  end
+
 
 end

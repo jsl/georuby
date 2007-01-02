@@ -11,4 +11,5 @@ require 'geo_ruby/simple_features/envelope'
 require 'geo_ruby/simple_features/ewkb_parser'
 require 'geo_ruby/simple_features/ewkt_parser'
 require 'geo_ruby/simple_features/geometry_factory'
+require 'geo_ruby/simple_features/georss_parser'
 

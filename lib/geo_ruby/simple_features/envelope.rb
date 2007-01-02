@@ -35,6 +35,15 @@ module GeoRuby
         Point.from_x_y((lower_corner.x + upper_corner.x)/2,(lower_corner.y + upper_corner.y)/2)
       end
 
+      #Tests the equality of line strings
+      def ==(other_envelope)
+        if other_envelope.class != self.class
+          false
+        else
+          upper_corner == other_envelope.upper_corner and lower_corner == other_envelope.lower_corner
+        end
+      end
+
       #georss serialization: Dialect can be passed as option <tt>:dialect</tt> and set to <tt>:simple</tt> (default)
       #<tt>:w3cgeo</tt> or <tt>:gml</tt>. Options <tt>:featuretypetag
       def as_georss(options)

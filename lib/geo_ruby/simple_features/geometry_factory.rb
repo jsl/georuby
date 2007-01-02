@@ -26,19 +26,35 @@ module GeoRuby
       def add_point_x_y(x,y)
         @geometry_stack.last.set_x_y(x,y)
       end
+      #add 2D points to the current geometry
+      def add_points_x_y(xy)
+        xy.each_slice(2) {|slice| add_point_x_y(*slice)}
+      end
       #add a 3D point to the current geometry
       def add_point_x_y_z(x,y,z)
         @geometry_stack.last.set_x_y_z(x,y,z)
+      end
+      #add 3D points to the current geometry
+      def add_points_x_y_z(xyz)
+        xyz.each_slice(3) {|slice| add_point_x_y_z(*slice)}
       end
       #add a 2D point with M to the current geometry
       def add_point_x_y_m(x,y,m)
         @geometry_stack.last.set_x_y(x,y)
         @geometry_stack.last.m=m
       end
+      #add 2D points with M to the current geometry
+      def add_points_x_y_m(xym)
+        xym.each_slice(3) {|slice| add_point_x_y_m(*slice)}
+      end
       #add a 3D point with M to the current geometry
       def add_point_x_y_z_m(x,y,z,m)
         @geometry_stack.last.set_x_y_z(x,y,z)
         @geometry_stack.last.m=m
+      end
+       #add 3D points with M to the current geometry
+      def add_points_x_y_z_m(xyzm)
+        xyzm.each_slice(4) {|slice| add_point_x_y_z_m(*slice)}
       end
       #begin a geometry of type +geometry_type+
       def begin_geometry(geometry_type,srid=DEFAULT_SRID)

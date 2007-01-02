@@ -1,13 +1,13 @@
 module GeoRuby
   module SimpleFeatures
     
+    #Contains the bounding box of a geometry
     class Envelope 
       attr_accessor :lower_corner, :upper_corner
       attr_accessor :srid, :with_z
       
       #Creates a enw Envelope with +lower_corner+ as the first element of the corners array and +upper_corner+ as the second element
-      def initialize(corners, srid = DEFAULT_SRID, with_z = false)
-        @lower_corner,@upper_corner = corners
+      def initialize(srid = DEFAULT_SRID, with_z = false)
         @srid = srid
         @with_z = with_z
       end
@@ -105,6 +105,21 @@ module GeoRuby
         
         result += "</LatLonAltBox>\n"
       end
+
+      #Creates a new envelope. Accept an array of 2 points as argument
+      def self.from_points(points,srid=DEFAULT_SRID,with_z=false)
+        e = Envelope.new(srid,with_z)
+        e.lower_corner, e.upper_corner = points
+        e
+      end
+
+      #Creates a new envelope. Accept a sequence of points as argument : ((x,y),(x,y))
+      def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false)
+        e = Envelope.new(srid,with_z)
+        e.lower_corner, e.upper_corner =  points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z)}
+        e
+      end
+      
     end
   end
 end

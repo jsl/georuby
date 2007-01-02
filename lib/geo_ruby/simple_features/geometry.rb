@@ -33,7 +33,7 @@ module GeoRuby#:nodoc:
       
       #Returns an Envelope object for the geometry
       def envelope
-        Envelope.new(bounding_box,srid,with_z)
+        Envelope.from_points(bounding_box,srid,with_z)
       end
             
       #Outputs the geometry as an EWKB string.

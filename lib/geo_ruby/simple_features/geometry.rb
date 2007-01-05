@@ -2,14 +2,7 @@ module GeoRuby#:nodoc:
   module SimpleFeatures
     #arbitrary default SRID
     DEFAULT_SRID=-1
-    #indicates the presence of Z coordinates in EWKB strings
-    Z_MASK=0x80000000
-    #indicates the presence of M coordinates in EWKB strings.
-    M_MASK=0x40000000
-    #indicate the presence of a SRID in EWKB strings.
-    SRID_MASK=0x20000000
-    
-    
+        
     #Root of all geometric data classes.
     #Objects of class Geometry should not be instantiated.
     class Geometry

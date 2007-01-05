@@ -46,7 +46,7 @@ module GeoRuby
 
       #georss serialization: Dialect can be passed as option <tt>:dialect</tt> and set to <tt>:simple</tt> (default)
       #<tt>:w3cgeo</tt> or <tt>:gml</tt>. Options <tt>:featuretypetag
-      def as_georss(options)
+      def as_georss(options = {})
         dialect= options[:dialect] || :simple
         case(dialect)
         when :simple
@@ -66,21 +66,21 @@ module GeoRuby
       end
       
        #georss simple representation
-      def georss_simple_representation(options) #:nodoc:
+      def georss_simple_representation(options = {}) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
         geom_attr = options[:geom_attr]
         "<#{georss_ns}:box#{geom_attr}>#{lower_corner.y} #{lower_corner.x} #{upper_corner.y} #{upper_corner.x}</#{georss_ns}:box>\n"
       end
 
       #georss w3c representation : outputs the first point of the line
-      def georss_w3cgeo_representation(options) #:nodoc:
+      def georss_w3cgeo_representation(options = {}) #:nodoc:
         w3cgeo_ns = options[:w3cgeo_ns] || "geo"
         point = self.center
         "<#{w3cgeo_ns}:lat>#{point.y}</#{w3cgeo_ns}:lat>\n<#{w3cgeo_ns}:long>#{point.x}</#{w3cgeo_ns}:long>\n"
       end
 
       #georss gml representation
-      def georss_gml_representation(options) #:nodoc:
+      def georss_gml_representation(options = {}) #:nodoc:
         georss_ns = options[:georss_ns] || "georss"
         gml_ns = options[:gml_ns] || "gml"
         result = "<#{georss_ns}:where>\n<#{gml_ns}:Envelope>\n"

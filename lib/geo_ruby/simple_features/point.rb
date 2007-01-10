@@ -173,7 +173,7 @@ module GeoRuby
         result = "<Point#{options[:id_attr]}>\n"
         result += options[:geom_data]
         result += "<coordinates>#{x},#{y}"
-        result += ",#{z || 0}" if options[:allow_z]
+        result += ",#{options[:fixed_z] || z ||0}" if options[:allow_z]
         result += "</coordinates>\n"
         result += "</Point>\n"
       end

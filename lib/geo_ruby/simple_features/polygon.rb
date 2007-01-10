@@ -103,7 +103,7 @@ module GeoRuby
             boundary = "innerBoundaryIs"
           end
           result += "<#{boundary}><LinearRing><coordinates>\n"
-          result += ring.kml_poslist(options[:allow_z])
+          result += ring.kml_poslist(options)
           result += "\n</coordinates></LinearRing></#{boundary}>\n"
         end
         result += "</Polygon>\n"

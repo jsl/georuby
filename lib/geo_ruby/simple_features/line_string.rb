@@ -116,14 +116,14 @@ module GeoRuby
         result = "<LineString#{options[:id_attr]}>\n"
         result += options[:geom_data]
         result += "<coordinates>"
-        result += kml_poslist(options[:allow_z])
+        result += kml_poslist(options)
         result += "</coordinates>\n"
         result += "</LineString>\n"
       end
       
-      def kml_poslist(allow_z) #:nodoc: 
-        if allow_z
-          map {|point| "#{point.x},#{point.y},#{point.z || 0}" }.join(" ")
+      def kml_poslist(options) #:nodoc: 
+        if options[:allow_z]
+          map {|point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }.join(" ")
         else
           map {|point| "#{point.x},#{point.y}" }.join(" ")
         end

@@ -88,6 +88,7 @@ module GeoRuby#:nodoc:
 
       #Outputs the geometry in georss format. 
       #Assumes the geometries are in latlon format, with x as lon and y as lat.
+      #Pass the <tt>:dialect</tt> option to swhit format. Possible values are: <tt>:simple</tt> (default), <tt>:w3cgeo</tt> and <tt>:gml</tt>.
       def as_georss(options = {})
         dialect= options[:dialect] || :simple
         case(dialect)
@@ -118,9 +119,10 @@ module GeoRuby#:nodoc:
         geom_data += "<tesselate>#{options[:tesselate]}</tesselate>\n" if options[:tesselate]
         geom_data += "<altitudeMode>#{options[:altitude_mode]}</altitudeMode>\n" if options[:altitude_mode]
         
-        allow_z = with_z && (!options[:altitude_mode].nil?) && options[:atitude_mode] != "clampToGround"
+        allow_z = (with_z || !options[:altitude].nil? )&& (!options[:altitude_mode].nil?) && options[:atitude_mode] != "clampToGround"
+        fixed_z = options[:altitude]
         
-        kml_representation(options.merge(:id_attr => id_attr, :geom_data => geom_data, :allow_z => allow_z))
+        kml_representation(options.merge(:id_attr => id_attr, :geom_data => geom_data, :allow_z => allow_z, :fixed_z => fixed_z))
       end
       
       #Creates a geometry based on a EWKB string. The actual class returned depends of the content of the string passed as argument. Since WKB strings are a subset of EWKB, they are also valid.

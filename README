@@ -1,5 +1,5 @@
 =GeoRuby
-This is GeoRuby 1.1.0. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
+This is GeoRuby 1.1.2. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
 
 ===Available data types
 The following geometric data types are provided :
@@ -19,9 +19,9 @@ On top of this an Envelope class is available, to contain the bounding box of a 
 ===Input and output
 These geometries can be input and output in WKB/EWKB/WKT/EWKT format (as well as the related HexWKB and HexEWKB formats). HexEWKB and WKB are the default form under which geometric data is returned respectively from PostGIS and MySql.
 
-GeoRSS Simple, GeoRSS W3CGeo, GeoRSS GML can also be input and output. Note that they will not output valid RSS, but just the part strictly concerning the geometry as outlined in http://www.georss.org/1/ . Since the model does not allow multiple geometries, for geometry collections, only the first geometry will be output. Similarly, for polygons, the GeoRSS output will only contain the outer ring. As for W3CGeo output, only points can be output, so the first point of the geometry is chosen. By default the Simple format is output. Envelope can also be output in these formats: The box geometric type is chosen (except for W3CGeo, where the center of the envelope is chose). 
+GeoRSS Simple, GeoRSS W3CGeo, GeoRSS GML can also be input and output. Note that they will not output valid RSS, but just the part strictly concerning the geometry as outlined in http://www.georss.org/1/ . Since the model does not allow multiple geometries, for geometry collections, only the first geometry will be output. Similarly, for polygons, the GeoRSS output will only contain the outer ring. As for W3CGeo output, only points can be output, so the first point of the geometry is chosen. By default the Simple format is output. Envelope can also be output in these formats: The box geometric type is chosen (except for W3CGeo, where the center of the envelope is chose). These formats can also be input and a GeoRuby geometry will be created. Note that it will not read a valid RSS file, only a geometry string.
 
-On top of that, there is now support for KML output. As for GeoRSS, a valid KML file will not be output, but only the geometric data. Options <tt>:id</tt>, <tt>:extrude</tt>, <tt>:tesselate</tt> and <tt>:altitude_mode</tt> can be given. Note that if the <tt>:altitude_mode</tt> option is not passed or set to <tt>clampedToGround</tt>, the altitude data will not be output even if present. Envelopes output a LatLonAltBox instead of a geometry.
+On top of that, there is now support for KML output. As for GeoRSS, a valid KML file will not be output, but only the geometric data. Options <tt>:id</tt>, <tt>:extrude</tt>, <tt>:tesselate</tt> and <tt>:altitude_mode</tt> can be given. Note that if the <tt>:altitude_mode</tt> option is not passed or set to <tt>clampToGround</tt>, the altitude data will not be output even if present. Envelopes output a LatLonAltBox instead of a geometry.
 
 ===Installation
 To install the latest version, just type :
@@ -38,7 +38,7 @@ To install the latest version, just type :
 ===For version 1.2.0
 - Reading (and writing?) of SHP files
 - Documentation
-- Update of the tutorials to show the GeoRSS and KML output, as well as the reading of SHP files
+- Geometric operators
 
 ===License
 GeoRuby is released under the MIT license.

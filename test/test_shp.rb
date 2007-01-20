@@ -20,14 +20,14 @@ class TestShp < Test::Unit::TestCase
     
     record1 = shpfile[0]
     assert(record1.geometry.kind_of?(Point))
-    assert_in_delta(-88.75832,record1.geometry.x,0.00001)
-    assert_in_delta(33.86890,record1.geometry.y,0.00001)
+    assert_in_delta(-90.08375,record1.geometry.x,0.00001)
+    assert_in_delta(34.39996,record1.geometry.y,0.00001)
     assert_equal(6,record1.data['Hoyoyo'])
     
     record2 = shpfile[1]
     assert(record1.geometry.kind_of?(Point))
-    assert_in_delta(-84.41743,record2.geometry.x,0.00001)
-    assert_in_delta(31.69417,record2.geometry.y,0.00001)
+    assert_in_delta(-87.82580,record2.geometry.x,0.00001)
+    assert_in_delta(33.36417,record2.geometry.y,0.00001)
     assert_equal(9,record2.data['Hoyoyo'])
     
     shpfile.close

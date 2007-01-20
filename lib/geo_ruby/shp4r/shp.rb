@@ -281,7 +281,7 @@ module GeoRuby
     
     #A SHP record : contains both the geometry and the data fields (from the DBF)
     class ShpRecord
-      attr_accessor :geometry , :data
+      attr_reader :geometry , :data
       
       def initialize(geometry, data)
         @geometry = geometry

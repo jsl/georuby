@@ -1,5 +1,5 @@
 # Copyright 2006 Keith Morrison (http://infused.org)
-# Slighly modified version of the DBF library http://rubyforge.org/projects/dbf/
+# Modified version of his DBF library (http://rubyforge.org/projects/dbf/)
 
 module GeoRuby
   module Shp4r 
@@ -134,14 +134,16 @@ module GeoRuby
         def active_record?
           @data_file.read(1).unpack('H2').to_s == '20' rescue false
         end
-        
+                
         def build_record
           record = DbfRecord.new
           @fields.each do |field| 
             case field.type
-            when 'N' # number
-              record[field.name] = field.decimal == 0 ? unpack_integer(field) : unpack_float(field) rescue nil
-            when 'D' # date
+            when 'N'
+              record[field.name] = unpack_integer(field) rescue nil
+            when 'F'
+              record[field.name] = unpack_float(field) rescue nil
+            when 'D'
               raw = unpack_string(field).to_s.strip
               unless raw.empty?
                 begin
@@ -150,10 +152,10 @@ module GeoRuby
                   record[field.name] = Date.new(*raw.match(DATE_REGEXP).to_a.slice(1,3).map {|n| n.to_i}) rescue nil
                 end
               end
-            when 'M' # memo
+            when 'M'
               starting_block = unpack_integer(field)
               record[field.name] = starting_block == 0 ? nil : memo(starting_block) rescue nil
-            when 'L' # logical
+            when 'L'
               record[field.name] = unpack_string(field) =~ /^(y|t)$/i ? true : false rescue false
             when 'C'
               record[field.name] = unpack_string(field).strip
@@ -213,15 +215,14 @@ module GeoRuby
       class FieldError < StandardError; end
       
       class Field
-        attr_accessor :name, :type, :length, :decimal
+        attr_reader :name, :type, :length, :decimal
 
         def initialize(name, type, length, decimal)
           raise FieldError, "field length must be greater than 0" unless length > 0
-          self.name, self.type, self.length, self.decimal = name, type, length, decimal
-        end
-
-        def name=(name)
-          @name = name.gsub(/\0/, '')
+          if type == 'N' and decimal != 0
+            type = 'F'
+          end
+          @name, @type, @length, @decimal = name.strip, type,length, decimal
         end
       end
       

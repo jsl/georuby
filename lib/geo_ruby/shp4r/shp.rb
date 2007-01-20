@@ -1,8 +1,9 @@
-require 'dbf'
+require  File.dirname(__FILE__) + '/dbf'
 
 module GeoRuby
   module Shp4r
     
+    #Enumerates all the types of SHP geometries. The MULTIPATCH one is the only one not currently supported by GeoRuby.
     module ShpType
       NULL_SHAPE = 0
       POINT = 1
@@ -20,14 +21,14 @@ module GeoRuby
       MULTIPATCH = 31 #not supported here
     end
     
-    #An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf)
+    #An interface to an ESRI shapefile (actually 3 files : shp, shx and dbf). Currently supports only the reading of geometries.
     class ShpFile
       attr_reader :shp_type, :record_count, :xmin, :ymin, :xmax, :ymax, :zmin, :zmax, :mmin, :mmax
 
       #Opens a SHP file. Both "abc.shp" and "abc" are accepted. The files "abc.shp", "abc.shx" and "abc.dbf" must be present
       def initialize(file, access = "r")
         #strip the shp out of the file if present
-        file.gsub!(/.shp$/i,"")
+        file = file.gsub(/.shp$/i,"")
         #check existence of shp, dbf and shx files       
         unless File.exists?(file + ".shp") and File.exists?(file + ".dbf") and File.exists?(file + ".shx")
           raise MalformedShpException.new("Missing one of shp, dbf or shx for: #{file}")

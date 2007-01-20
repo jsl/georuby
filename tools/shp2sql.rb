@@ -1,5 +1,4 @@
 $:.unshift("lib/spatial_adapter/","lib/spatial_adapter/lib")
-$:.unshift("../lib/")
 
 require 'geo_ruby'
 include GeoRuby::Shp4r
@@ -17,7 +16,7 @@ def shp_field_type_2_rails(type)
   end
 end
 
-def shp_geom_type_2_sql(type)
+def shp_geom_type_2_rails(type)
   case type
   when ShpType::POINT then :point
   when ShpType::POLYLINE then :mlti_line_string
@@ -59,9 +58,8 @@ ARGV.each do |shp|
         ActiveRecord::Schema.add_column(table_name, field.name.downcase, shp_field_type_2_rails(field.type))
       end
       
-      shp_type = shp_geom_type_2_sql(shp.shp_type)
       #add the geometric column in the_geom
-      ActiveRecord::Schema.add_column table_name,"the_geom",shp_type,:null => false
+      ActiveRecord::Schema.add_column(table_name,"the_geom",shp_geom_type_2_rails(shp.shp_type),:null => false)
       #add an index
       ActiveRecord::Schema.add_index(table_name,"the_geom",:spatial => true)
 
@@ -78,8 +76,7 @@ ARGV.each do |shp|
         
         #fill the fields
         shp.fields.each do |field|
-          #the columns in the dbf and in the table have the same name
-          record[field.name] = shape.data[field.name]
+          record[field.name.downcase] = shape.data[field.name]
         end
         
         #fill the geometry

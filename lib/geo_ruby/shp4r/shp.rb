@@ -116,7 +116,7 @@ module GeoRuby
           @shp.seek(32,IO::SEEK_CUR) #extent 
           num_parts, num_points = @shp.read(8).unpack("V2")
           
-          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts)
+          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
           parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
           
           points = Array.new(num_points) do
@@ -167,7 +167,7 @@ module GeoRuby
         when ShpType::POLYLINEZ
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
-          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts)
+          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
           parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
           @shp.seek(16,IO::SEEK_CUR)
@@ -226,7 +226,7 @@ module GeoRuby
         when ShpType::POLYLINEM
           @shp.seek(32,IO::SEEK_CUR)
           num_parts, num_points = @shp.read(8).unpack("V2")
-          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts)
+          parts =  @shp.read(num_parts * 4).unpack("V" + num_parts.to_s)
           parts << num_points #indexes for LS of idx i go to parts of idx i to idx i +1
           xys = Array.new(num_points) { @shp.read(16).unpack("E2") }
           @shp.seek(16,IO::SEEK_CUR)

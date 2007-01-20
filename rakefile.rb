@@ -30,12 +30,12 @@ spec = Gem::Specification::new do |s|
 GeoRuby is intended as a holder for data returned from PostGIS and MySQL Spatial queries. The data model roughly follows the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections)
 EOF
   s.author = 'Guilhem Vellut'
-  s.email = 'guilhem.vellut+georuby@gmail.com'
-  s.homepage = "http://thepochisuperstarmegashow.com/projects"
+  s.email = 'guilhem.vellut@gmail.com'
+  s.homepage = "http://thepochisuperstarmegashow.com/projects/"
   
   s.requirements << 'none'
   s.require_path = 'lib'
-  s.files = FileList["lib/**/*.rb", "test/**/*.rb", "README","MIT-LICENSE","rakefile.rb"]
+  s.files = FileList["lib/**/*.rb", "test/**/*.rb", "README","MIT-LICENSE","rakefile.rb","test/data/*.shp","test/data/*.dbf","test/data/*.shx","tools/**/*.yml","tools/**/*.rb","tools/lib/**/*"]
   s.test_files = FileList['test/test*.rb']
 
   s.has_rdoc = true

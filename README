@@ -1,5 +1,5 @@
 =GeoRuby
-This is GeoRuby 1.1.2. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
+This is GeoRuby 1.2.0. It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
 
 ===Available data types
 The following geometric data types are provided :
@@ -23,25 +23,28 @@ GeoRSS Simple, GeoRSS W3CGeo, GeoRSS GML can also be input and output. Note that
 
 On top of that, there is now support for KML output. As for GeoRSS, a valid KML file will not be output, but only the geometric data. Options <tt>:id</tt>, <tt>:extrude</tt>, <tt>:tesselate</tt> and <tt>:altitude_mode</tt> can be given. Note that if the <tt>:altitude_mode</tt> option is not passed or set to <tt>clampToGround</tt>, the altitude data will not be output even if present. Envelopes output a LatLonAltBox instead of a geometry.
 
+===SHP Reading
+Support for reading ESRI shapefiles (http://www.esri.com/library/whitepapers/pdfs/shapefile.pdf) has been added. A tool called <tt>shp2sql.rb</tt> is also provided : it shows how to use the SHP reading functionality together with the spatial adapter plugin for Rails to import spatial features into MySQL and PostGIS.
+
 ===Installation
 To install the latest version, just type :
       gem install GeoRuby
 
 ===Changes since the last version
-- Input of GeoRSS geometries (1.1.1)
-- Addition of the Vincenty ellipsoidal distance calculation method
-- The spherical distance now assumes the x and y are in degrees not radians
-- Addition of aliases to the +x+ and +y+ accessors, as well as the <tt>from_x_y_...</tt> constructors so the +x+ can be replaced by +lon+ and +y+ by +lat+.
-- Output of GeoRSS Simple, W3CGeo and GML formats
-- Output of KML format
+- Reading of ESRI shapefiles
+- Addition of a small tool to import spatial features in MySQL and PostGIS from a SHP file
 
-===For version 1.2.0
-- Reading (and writing?) of SHP files
+===Coming in the next versions
+- Writing of SHP files
+- Better shp2sql import tool
 - Documentation
 - Geometric operators
+
+===Acknowledgement
+The SHP reading part uses a modified version of the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org).
 
 ===License
 GeoRuby is released under the MIT license.
 
 ===Support
-Any questions, enhancement proposals, bug notifications or corrections can be sent to mailto:guilhem.vellut+georuby@gmail.com.
+Any questions, enhancement proposals, bug notifications or corrections can be sent to mailto:guilhem.vellut@gmail.com.

@@ -245,7 +245,15 @@ class TestSimpleFeatures < Test::Unit::TestCase
   #no test of the binary representation for linear_rings : always with polygons and like line_string
   def test_polygon_creation
     linear_ring1 = LinearRing.from_coordinates([[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],256) 
-    linear_ring2 = LinearRing.from_coordinates([[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]],256) 
+    linear_ring2 = LinearRing.from_coordinates([[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]],256)
+    point1 = Point.from_x_y(12.4,-45.3,256)
+    point2 = Point.from_x_y(45.4,41.6,256)
+    point3 = Point.from_x_y(4.456,1.0698,256)
+    point4 = Point.from_x_y(12.4,-45.3,256)
+    point5 = Point.from_x_y(2.4,5.3,256)
+    point6 = Point.from_x_y(5.4,1.4263,256)
+    point7 = Point.from_x_y(14.46,1.06,256)
+    point8 = Point.from_x_y(2.4,5.3,256)
     
     polygon = Polygon::new(256)
     assert_equal(0,polygon.length)
@@ -271,7 +279,11 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(linear_ring1,polygon[0])
     assert_equal(linear_ring2,polygon[1])
 
-    
+    polygon = Polygon.from_points([[point1,point2,point3,point4],[point5,point6,point7,point8]],256)
+    assert_equal(2,polygon.length)
+    assert_equal(linear_ring1,polygon[0])
+    assert_equal(linear_ring2,polygon[1])
+
     polygon = Polygon.from_coordinates([[[12.4,-45.3,15.2],[45.4,41.6,2.4],[4.456,1.0698,5.6],[12.4,-45.3,6.1]],[[2.4,5.3,4.5],[5.4,1.4263,4.2],[14.46,1.06,123.1],[2.4,5.3,4.4]]],256,true)
     assert_equal(Polygon,polygon.class)
     assert_equal(2,polygon.length)
@@ -286,6 +298,8 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_equal(2,bbox.length)
     assert_equal(Point.from_x_y_z(4.456,-45.3,2.4),bbox[0])
     assert_equal(Point.from_x_y_z(45.4,41.6,123.1),bbox[1])
+
+    
     
   end
   def test_polygon_equal

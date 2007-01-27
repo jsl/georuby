@@ -113,7 +113,7 @@ module GeoRuby
       
       #creates a new GeometryCollection from an array of geometries
       def self.from_geometries(geometries,srid=DEFAULT_SRID,with_z=false,with_m=false)
-        geometry_collection = GeometryCollection::new(srid,with_z,with_m)
+        geometry_collection = new(srid,with_z,with_m)
         geometry_collection.concat(geometries)
         geometry_collection
       end

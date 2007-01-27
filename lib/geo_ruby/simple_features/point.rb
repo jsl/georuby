@@ -23,6 +23,7 @@ module GeoRuby
         @x=x
         @y=y
         @z=z
+        self
       end
       alias :set_lon_lat_z :set_x_y_z
       
@@ -30,6 +31,7 @@ module GeoRuby
       def set_x_y(x,y)
         @x=x
         @y=y
+        self
       end
       alias :set_lon_lat :set_x_y
       
@@ -193,33 +195,29 @@ module GeoRuby
 
       #creates a point from the X and Y coordinates
       def self.from_x_y(x,y,srid=DEFAULT_SRID)
-        point= Point::new(srid)
+        point= new(srid)
         point.set_x_y(x,y)
-        point
       end
       
       #creates a point from the X, Y and Z coordinates
       def self.from_x_y_z(x,y,z,srid=DEFAULT_SRID)
-        point= Point::new(srid,true)
+        point= new(srid,true)
         point.set_x_y_z(x,y,z)
-        point
       end
       
 
       #creates a point from the X, Y and M coordinates
       def self.from_x_y_m(x,y,m,srid=DEFAULT_SRID)
-        point= Point::new(srid,false,true)
-        point.set_x_y(x,y)
+        point= new(srid,false,true)
         point.m=m
-        point
+        point.set_x_y(x,y)
       end
       
       #creates a point from the X, Y, Z and M coordinates
       def self.from_x_y_z_m(x,y,z,m,srid=DEFAULT_SRID)
-        point= Point::new(srid,true,true)
-        point.set_x_y_z(x,y,z)
+        point= new(srid,true,true)
         point.m=m
-        point
+        point.set_x_y_z(x,y,z)
       end
       
       #aliasing the constructors in case you want to use lat/lon instead of y/x

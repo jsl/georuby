@@ -24,14 +24,14 @@ module GeoRuby
 
       #Creates a new multi point from an array of points
       def self.from_points(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
-        multi_point= MultiPoint::new(srid,with_z,with_m)
+        multi_point= new(srid,with_z,with_m)
         multi_point.concat(points)
         multi_point
       end
 
       #Creates a new multi point from a list of point coordinates : ((x,y)...(x,y))
       def self.from_coordinates(points,srid= DEFAULT_SRID,with_z=false,with_m=false)
-        multi_point= MultiPoint::new(srid,with_z,with_m)
+        multi_point= new(srid,with_z,with_m)
         multi_point.concat(points.collect {|point| Point.from_coordinates(point,srid,with_z,with_m)})
         multi_point
       end

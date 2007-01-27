@@ -131,14 +131,14 @@ module GeoRuby
       
       #Creates a new line string. Accept an array of points as argument
       def self.from_points(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
-        line_string = LineString::new(srid,with_z,with_m)
+        line_string = new(srid,with_z,with_m)
         line_string.concat(points)
         line_string
       end
 
       #Creates a new line string. Accept a sequence of points as argument : ((x,y)...(x,y))
       def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false,with_m=false)
-        line_string = LineString::new(srid,with_z,with_m)
+        line_string = new(srid,with_z,with_m)
         line_string.concat( points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z,with_m)  } )
         line_string
       end

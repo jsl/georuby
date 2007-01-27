@@ -145,8 +145,12 @@ class TestSimpleFeatures < Test::Unit::TestCase
     assert_in_delta(554058.924,point1.ellipsoidal_distance(point2),0.001)
          
     assert_in_delta(555811.68,point1.spherical_distance(point2),0.01)
-    
-    
+  end
+
+  def point_subclassable
+    place = Class.new(Point)
+    p = place.from_x_y(0.0,0.0)
+    assert p.is_a?(place)
   end
 
   def test_line_string_creation

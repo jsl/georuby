@@ -1,5 +1,6 @@
 $:.unshift("lib/spatial_adapter/","lib/spatial_adapter/lib")
 
+require 'rubygems'
 require 'geo_ruby'
 include GeoRuby::Shp4r
 

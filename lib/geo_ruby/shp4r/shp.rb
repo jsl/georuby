@@ -25,6 +25,8 @@ module GeoRuby
     class ShpFile
       attr_reader :shp_type, :record_count, :xmin, :ymin, :xmax, :ymax, :zmin, :zmax, :mmin, :mmax
 
+      include Enumerable
+
       #Opens a SHP file. Both "abc.shp" and "abc" are accepted. The files "abc.shp", "abc.shx" and "abc.dbf" must be present
       def initialize(file, access = "r")
         #strip the shp out of the file if present

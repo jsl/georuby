@@ -73,5 +73,4 @@ class TestShp < Test::Unit::TestCase
     
     shpfile.close
   end
-
 end

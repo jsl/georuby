@@ -153,5 +153,12 @@ class TestGeorssKml < Test::Unit::TestCase
 
   end
 
+  def test_kml_read
+    g = Geometry.from_kml("<Point><coordinates>45 12</coordinates></Point>")
+    assert(g.is_a?(Point))
+    assert_equal(g,Point.from_x_y(45,12))
+    
+  end
+
 
 end

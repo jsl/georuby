@@ -154,10 +154,61 @@ class TestGeorssKml < Test::Unit::TestCase
   end
 
   def test_kml_read
-    g = Geometry.from_kml("<Point><coordinates>45 12</coordinates></Point>")
+    g = Geometry.from_kml("<Point><coordinates>45,12,25</coordinates></Point>")
     assert(g.is_a?(Point))
-    assert_equal(g,Point.from_x_y(45,12))
+    assert_equal(g,Point.from_x_y_z(45,12,25))
     
+    g = Geometry.from_kml("<LineString>
+      <extrude>1</extrude>
+      <tessellate>1</tessellate>
+      <coordinates>
+        -122.364383,37.824664,0 -122.364152,37.824322,0 
+      </coordinates>
+    </LineString>")
+    assert(g.is_a?(LineString))
+    assert(2,g.length)
+    assert_equal(LineString.from_points([Point.from_x_y_z(-122.364383,37.824664,0),Point.from_x_y_z(-122.364152,37.824322,0)],DEFAULT_SRID,true),g)
+                          
+    g = Geometry.from_kml("<Polygon>
+      <extrude>1</extrude>
+      <altitudeMode>relativeToGround</altitudeMode>
+      <outerBoundaryIs>
+        <LinearRing>
+          <coordinates>
+            -122.366278,37.818844,30
+            -122.365248,37.819267,30
+            -122.365640,37.819861,30
+            -122.366669,37.819429,30
+            -122.366278,37.818844,30
+          </coordinates>
+        </LinearRing>
+      </outerBoundaryIs>
+      <innerBoundaryIs>
+        <LinearRing>
+          <coordinates>
+            -122.366212,37.818977,30
+            -122.365424,37.819294,30
+            -122.365704,37.819731,30
+            -122.366488,37.819402,30
+            -122.366212,37.818977,30
+          </coordinates>
+        </LinearRing>
+      </innerBoundaryIs>
+      <innerBoundaryIs>
+        <LinearRing>
+          <coordinates>
+            -122.366212,37.818977,30
+            -122.365424,37.819294,30
+            -122.365704,37.819731,30
+            -122.366488,37.819402,30
+            -122.366212,37.818977,30
+          </coordinates>
+        </LinearRing>
+      </innerBoundaryIs>
+    </Polygon>")
+    assert(g.is_a?(Polygon))
+    assert_equal(3,g.length)
+
   end
 
 

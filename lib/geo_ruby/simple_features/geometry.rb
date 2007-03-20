@@ -160,6 +160,9 @@ module GeoRuby#:nodoc:
         [georss_parser.geometry, georss_parser.georss_tags]
       end
       
+      #Sends back a geometry from a KML encoded geometry string.
+      #Limitations : Only supports points, linestrings and polygons (no collection for now).
+      #Addapted from Pramukta's code
       def self.from_kml(kml)
         return GeoRuby::SimpleFeatures::Geometry.from_ewkt(kml_to_wkt(kml))
       end
@@ -168,51 +171,42 @@ module GeoRuby#:nodoc:
       def self.kml_to_wkt(kml)
         doc = REXML::Document.new(kml)
         wkt = ""
-        if KML_GEOMETRY_TAGS.include?(doc.root.name)
+        if ["Point", "LineString", "Polygon" ].include?(doc.root.name)
           case doc.root.name 
           when "Point" then
             coords = doc.elements["/Point/coordinates"].text.gsub(/\n/," ")
-            wkt = doc.root.name.upcase + "(" + split_coords_with_z(coords).join(' ') + ")"
+            wkt = doc.root.name.upcase + "(" + split_coords(coords).join(' ') + ")"
           when "LineString" then
             coords = doc.elements["/LineString/coordinates"].text.gsub(/\n/," ")
-            coords = split_coords_with_z(coords)
+            coords = split_coords(coords)
             wkt = doc.root.name.upcase + "(" + coords.join(",") + ")"
           when "Polygon" then
             # polygons have one outer ring and zero or more inner rings
-            outer_coords = doc.elements["/Polygon/outerBoundaryIs/LinearRing/coordinates"].text
-            outer_coords.gsub!(/\n/, " ")
-            outer_coords = split_coords_with_z(outer_coords,h)
-
-            # # for right now we are just ignoring the inner rings
-            # inner_coords = doc.find(child.path+"/innerBoundaryIs/LinearRing/coordinates").first.content
-            # inner_coords = inner_coords.collect {|coords| coords.split(" ").collect {|coord| coord.split(",").join(" ")} }
-
-            inner_wkt = ""
-            # if inner_coords.any?
-            #  inner_wkt = inner_coords.collect {|coords| "(" + coords.gsub(/,/, " ") + ")"}.join(",")
-            #  inner_wkt = "," + inner_wkt
-            # end
-
-            if outer_coords.first != outer_coords.last
-              # Close the ring if it isn't already -- not a requirement of KML but
-              # breaks everything else
-              outer_coords.push outer_coords.first
+            bounds = []
+            bounds << doc.elements["/Polygon/outerBoundaryIs/LinearRing/coordinates"].text
+            inner_coords_elements = doc.elements.each("/Polygon/innerBoundaryIs/LinearRing/coordinates") do |inner_coords|
+              inner_coords = inner_coords.text
+              bounds << inner_coords
             end
-            wkt = doc.root.name.upcase + "((" + outer_coords.join(",") + ")" + inner_wkt + ")"
+            
+            wkt = doc.root.name.upcase + "(" + bounds.map do |bound|
+              bound.gsub!(/\n/, " ")
+              bound = split_coords(bound)
+              if bound.first != bound.last
+                bound.push bound.first
+              end
+              "(" + bound.join(",") + ")"
+            end.join(",") + ")"
           end
         end
-        return wkt
+        return wkt 
       end
-
-      KML_GEOMETRY_TAGS = ["Point", "LineString", "Polygon" ]
 
       private
 
-      # this method throws out the z coordinate
-      def Geometry.split_coords_with_z(coords)
-        coords.split(/\s+/).collect { |coord|
-          clist = coord.split(",")
-          clist.slice(0,2).join(" ")
+      def self.split_coords(coords)
+        coords.split(" ").collect { |coord|
+          coord.gsub(","," ")
         }
       end
     end

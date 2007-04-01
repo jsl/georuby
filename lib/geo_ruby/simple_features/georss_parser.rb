@@ -77,9 +77,9 @@ module GeoRuby
               raise GeorssFormatError.new("Bad GML GeoRSS format: Malformed Polygon")
             end
           elsif gml =~ /^<\s*[^:>]*:Envelope\s*>/
-            if gml =~ /<[^:>]*:LowerCorner\s*>([^<]*)</
+            if gml =~ /<\s*[^:>]*:lowerCorner\s*>([^<]*)</
               lc = $1.split(" ").collect { |x| x.to_f}.reverse
-              if gml =~ /<[^:>]*:UpperCorner\s*>([^<]*)</
+              if gml =~ /<\s*[^:>]*:upperCorner\s*>([^<]*)</
                 uc = $1.split(" ").collect { |x| x.to_f}.reverse
                 @geometry = Envelope.from_coordinates([lc,uc])
               else
@@ -95,24 +95,24 @@ module GeoRuby
           #must be simple format
           if georss =~ /^<\s*[^>:]*:point([^>]*)>(.*)</m
             tags = $1
-            point = $2.split(" ")
+            point = $2.gsub(","," ").split(" ")
             @geometry = Point.from_x_y(point[1].to_f,point[0].to_f)
           elsif georss =~ /^<\s*[^>:]*:line([^>]*)>(.*)</m
             tags = $1
             @geometry = LineString.new
-            xy = $2.split(" ")
+            xy = $2.gsub(","," ").split(" ")
             0.upto(xy.size/2 - 1) { |index| @geometry << Point.from_x_y(xy[index*2 + 1].to_f,xy[index*2].to_f)}
           elsif georss =~ /^<\s*[^>:]*:polygon([^>]*)>(.*)</m
             tags = $1
             @geometry = Polygon.new
             linear_ring = LinearRing.new
             @geometry << linear_ring
-            xy = $2.split(" ")
+            xy = $2.gsub(","," ").split(" ")
             0.upto(xy.size/2 - 1) { |index| linear_ring << Point.from_x_y(xy[index*2 + 1].to_f,xy[index*2].to_f)}
           elsif georss =~ /^<\s*[^>:]*:box([^>]*)>(.*)</m
             tags = $1
             corners = []
-            xy = $2.split(" ")
+            xy = $2.gsub(","," ").split(" ")
             0.upto(xy.size/2 - 1) {|index| corners << Point.from_x_y(xy[index*2 + 1].to_f,xy[index*2].to_f)}
             @geometry = Envelope.from_points(corners)
           else
@@ -122,11 +122,11 @@ module GeoRuby
           #geometry found: parse tags
           return unless with_tags
 
-          @georss_tags.featuretypetag = $1 if tags =~ /featuretypetag="([^"]*)"/
-          @georss_tags.relationshiptag = $1 if tags =~ /relationshiptag="([^"]*)"/
-          @georss_tags.elev = $1.to_f if tags =~ /elev="([^"]*)"/
-          @georss_tags.floor = $1.to_i if tags =~ /floor="([^"]*)"/
-          @georss_tags.radius = $1.to_f if tags =~ /radius="([^"]*)"/
+          @georss_tags.featuretypetag = $1 if tags =~ /featuretypetag=['"]([^"']*)['"]/
+          @georss_tags.relationshiptag = $1 if tags =~ /relationshiptag=['"]([^'"]*)['"]/
+          @georss_tags.elev = $1.to_f if tags =~ /elev=['"]([^'"]*)['"]/
+          @georss_tags.floor = $1.to_i if tags =~ /floor=['"]([^'"]*)['"]/
+          @georss_tags.radius = $1.to_f if tags =~ /radius=['"]([^'"]*)['"]/
 
         end
       end

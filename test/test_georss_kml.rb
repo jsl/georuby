@@ -146,7 +146,7 @@ class TestGeorssKml < Test::Unit::TestCase
     assert_equal(geom.class, Envelope)
     assert_equal(e, geom)
 
-    str = "<georss:where><gml:Envelope><gml:LowerCorner>-45.3 \n 4.456</gml:LowerCorner><gml:UpperCorner>41.6 \t\n 45.4</gml:UpperCorner></gml:Envelope></georss:where>"
+    str = "<georss:where><gml:Envelope><gml:lowerCorner>-45.3 \n 4.456</gml:lowerCorner><gml:upperCorner>41.6 \t\n 45.4</gml:upperCorner></gml:Envelope></georss:where>"
     geom = Geometry.from_georss(str)
     assert_equal(geom.class, Envelope)
     assert_equal(e, geom)

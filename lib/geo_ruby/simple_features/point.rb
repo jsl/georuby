@@ -4,11 +4,11 @@ module GeoRuby
   module SimpleFeatures
     #Represents a point. It is in 3D if the Z coordinate is not +nil+.
     class Point < Geometry
-      
-      
+            
       attr_accessor :x,:y,:z,:m
-      #if you prefer calling the coordinates lat and lon
+      #if you prefer calling the coordinates lat and lon (or lng, for GeoKit compatibility)
       alias :lon :x
+      alias :lng :x
       alias :lat :y
       
       def initialize(srid=DEFAULT_SRID,with_z=false,with_m=false)

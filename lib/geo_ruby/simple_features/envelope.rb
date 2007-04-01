@@ -122,7 +122,7 @@ module GeoRuby
         e
       end
 
-      #Creates a new envelope. Accept a sequence of points as argument : ((x,y),(x,y))
+      #Creates a new envelope. Accept a sequence of point coordinates as argument : ((x,y),(x,y))
       def self.from_coordinates(points,srid=DEFAULT_SRID,with_z=false)
         e = Envelope.new(srid,with_z)
         e.lower_corner, e.upper_corner =  points.collect{|point_coords| Point.from_coordinates(point_coords,srid,with_z)}

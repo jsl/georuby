@@ -1,4 +1,5 @@
 =GeoRuby
+
 This is GeoRuby 1.2.3 It is intended as a holder for data returned from PostGIS and the Spatial Extensions of MySql. The data model roughly follows the OGC "Simple Features for SQL" specification (see http://www.opengis.org/docs/99-049.pdf), although without any kind of advanced functionalities (such as geometric operators or reprojections). 
 
 ===Available data types

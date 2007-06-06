@@ -19,6 +19,15 @@ module GeoRuby#:nodoc:
         @with_m=with_m
       end
 
+      def srid=(new_srid)
+        @srid = new_srid
+        unless self.is_a?(Point)
+          self.each do |geom|
+            geom.srid=new_srid
+          end
+        end
+      end
+
       
       #to be implemented in subclasses
       def bounding_box

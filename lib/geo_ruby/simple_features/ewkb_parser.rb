@@ -156,16 +156,20 @@ module GeoRuby
       end
       #transforms a HexEWKB string into an EWKB string 
       def decode_hex(hexewkb)
-        temp_hexewkb= hexewkb.clone
         result=""
-        while c = temp_hexewkb.slice!(0,2) do
-          break if c.length==0
-          result << c.hex
+        num_bytes = (hexewkb.size + 1) / 2
+        0.upto(num_bytes-1) do |i|
+          result << hexewkb[i*2,2].hex
         end
         result
       end
-
     end
+
+    class HexEWKBParser < EWKBParser
+     #transforms a HexEWKB string into an EWKB string
+     # Patched for speedup
+     
+   end
 
     class UnpackStructure #:nodoc:
       NDR=1

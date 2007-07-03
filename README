@@ -42,7 +42,7 @@ To install the latest version, just type :
 - Geometric operators
 
 ===Acknowledgement
-The SHP reading part uses a modified version of the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org).
+The SHP reading part uses a modified version of the DBF library (http://rubyforge.org/projects/dbf/) by Keith Morrison (http://infused.org). Thanks also to Pramukta Kumar and Pete Schwamb for their contributions. 
 
 ===License
 GeoRuby is released under the MIT license.

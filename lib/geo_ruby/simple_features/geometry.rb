@@ -32,6 +32,10 @@ module GeoRuby#:nodoc:
       #to be implemented in subclasses
       def bounding_box
       end
+
+      #to be implemented in subclasses
+      def m_range
+      end
       
       #Returns an Envelope object for the geometry
       def envelope

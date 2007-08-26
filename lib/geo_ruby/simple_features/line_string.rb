@@ -47,6 +47,19 @@ module GeoRuby
           [Point.from_x_y(min_x,min_y),Point.from_x_y(max_x,max_y)]
         end
       end
+
+      def m_range
+        if with_m
+          max_m, min_m = -Float::MAX, Float::MAX
+          each do |point|
+            max_m = point.m if point.m > max_m
+            min_m = point.m if point.m < min_m
+          end
+          [min_m,max_m]
+        else
+          [0,0]
+        end
+      end
       
       #Tests the equality of line strings
       def ==(other_line_string)

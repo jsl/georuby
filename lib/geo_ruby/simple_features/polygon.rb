@@ -36,6 +36,20 @@ module GeoRuby
         end
       end
       
+      def m_range
+        if with_m
+          max_m, min_m = -Float::MAX, Float::MAX
+          each do |lr|
+            lrmr = lr.m_range
+            max_m = lrmr[1] if lrmr[1] > max_m
+            min_m = lrmr[0] if lrmr[0] < min_m
+          end
+          [min_m,max_m]
+        else
+          [0,0]
+        end
+      end
+
       #tests for other equality. The SRID is not taken into account.
       def ==(other_polygon)
         if other_polygon.class != self.class or

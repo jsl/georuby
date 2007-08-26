@@ -114,6 +114,10 @@ module GeoRuby
           [Point.from_x_y_z(@x,@y,@z),Point.from_x_y_z(@x,@y,@z)]
         end
       end
+
+      def m_range
+        [@m,@m]
+      end
       
       #tests the equality of the position of points + m
       def ==(other_point)

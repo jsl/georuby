@@ -16,10 +16,12 @@ module GeoRuby
       attr_reader :geometry
       
       def initialize
+        @geometry = nil
         @geometry_stack = []
       end
       #resets the factory
       def reset
+        @geometry = nil
         @geometry_stack = []
       end
       #add a 2D point to the current geometry

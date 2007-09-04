@@ -444,7 +444,7 @@ module GeoRuby
                   else 
                     data.to_s
                   end
-            @dbf_io << [str].pack("a#{field.length}")
+            @dbf_io << [str].pack("A#{field.length}")
           end
           
           shp_str,min_xp,max_xp,min_yp,max_yp,min_zp,max_zp,min_mp,max_mp = build_shp_geometry(record.geometry)

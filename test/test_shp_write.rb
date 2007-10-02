@@ -53,7 +53,7 @@ class TestShp < Test::Unit::TestCase
     
     assert_equal(2,shpfile.record_count)
     shpfile.close
-    #rm_all_shp(File.dirname(__FILE__) + '/data/polyline2')
+    rm_all_shp(File.dirname(__FILE__) + '/data/polyline2')
   end
 
   def test_polygon

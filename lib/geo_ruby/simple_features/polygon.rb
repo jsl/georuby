@@ -109,7 +109,7 @@ module GeoRuby
       #it won't be used by GE anyway: clampToGround is the default)
       def kml_representation(options = {})
         result = "<Polygon#{options[:id_attr]}>\n"
-        result += options[:geom_data]
+        result += options[:geom_data] if options[:geom_data]
         rings.each_with_index do |ring, i|
           if i == 0
             boundary = "outerBoundaryIs"

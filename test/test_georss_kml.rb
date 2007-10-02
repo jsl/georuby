@@ -211,5 +211,21 @@ class TestGeorssKml < Test::Unit::TestCase
 
   end
 
+   def test_to_kml_for_point_does_not_raise_type_error_if_geom_data_not_provided
+    point = Point.from_coordinates([1.6,2.8],123)
+    assert_nothing_raised(TypeError) { point.kml_representation }
+  end
+  
+  def test_to_kml_for_polygon_does_not_raise_type_error_if_geom_data_not_provided
+    polygon =  Polygon.from_coordinates([[[12.4,-45.3],[45.4,41.6],[4.456,1.0698],[12.4,-45.3]],[[2.4,5.3],[5.4,1.4263],[14.46,1.06],[2.4,5.3]]],256)
+    
+    assert_nothing_raised(TypeError) { polygon.kml_representation }
+  end
+  
+  def test_to_kml_for_line_string_does_not_raise_type_error_if_geom_data_not_provided
+    ls = LineString.from_coordinates([[5.7,12.45],[67.55,54]],256)
+    assert_nothing_raised(TypeError) { ls.kml_representation }
+  end
+
 
 end

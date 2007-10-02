@@ -177,7 +177,7 @@ module GeoRuby
       #it won't be used by GE anyway: clampToGround is the default)
       def kml_representation(options = {}) #:nodoc: 
         result = "<Point#{options[:id_attr]}>\n"
-        result += options[:geom_data]
+        result += options[:geom_data] if options[:geom_data]
         result += "<coordinates>#{x},#{y}"
         result += ",#{options[:fixed_z] || z ||0}" if options[:allow_z]
         result += "</coordinates>\n"

@@ -135,11 +135,16 @@ module GeoRuby
       end
       
       def kml_poslist(options) #:nodoc: 
-        if options[:allow_z]
-          map {|point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }.join(" ")
+         pos_list = if options[:allow_z]
+           map {|point| "#{point.x},#{point.y},#{options[:fixed_z] || point.z || 0}" }
         else
-          map {|point| "#{point.x},#{point.y}" }.join(" ")
+          map {|point| "#{point.x},#{point.y}" }
         end
+	if(options[:reverse])
+	   pos_list.reverse.join(" ")
+	else
+	   pos_lis.join(" ")
+	end
       end
       
       #Creates a new line string. Accept an array of points as argument

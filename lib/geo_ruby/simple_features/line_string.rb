@@ -143,7 +143,7 @@ module GeoRuby
 	if(options[:reverse])
 	   pos_list.reverse.join(" ")
 	else
-	   pos_lis.join(" ")
+	   pos_list.join(" ")
 	end
       end
       

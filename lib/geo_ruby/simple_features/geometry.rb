@@ -7,7 +7,7 @@ module GeoRuby#:nodoc:
     #Objects of class Geometry should not be instantiated.
     class Geometry
       #SRID of the geometry
-      attr_accessor :srid
+      attr_reader :srid #writer defined below
       #Flag indicating if the z ordinate of the geometry is meaningful
       attr_accessor :with_z
       #Flag indicating if the m ordinate of the geometry is meaningful

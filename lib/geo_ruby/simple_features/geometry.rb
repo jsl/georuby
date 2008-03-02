@@ -56,7 +56,7 @@ module GeoRuby#:nodoc:
         if @with_m and allow_m
           type = type | M_MASK
         end
-        if @srid != DEFAULT_SRID and allow_srid
+        if allow_srid
           type = type | SRID_MASK
           ewkb << [type,@srid].pack("VV")
         else
@@ -84,7 +84,7 @@ module GeoRuby#:nodoc:
 
       #Outputs the geometry as an EWKT string.
       def as_ewkt(allow_srid=true,allow_z=true,allow_m=true)
-        if @srid!=DEFAULT_SRID and allow_srid #the default SRID is not output like in PostGIS
+        if allow_srid #the default SRID is not output like in PostGIS
           ewkt="SRID=#{@srid};"
         else
           ewkt=""

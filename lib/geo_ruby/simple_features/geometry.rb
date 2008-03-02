@@ -84,7 +84,7 @@ module GeoRuby#:nodoc:
 
       #Outputs the geometry as an EWKT string.
       def as_ewkt(allow_srid=true,allow_z=true,allow_m=true)
-        if allow_srid #the default SRID is not output like in PostGIS
+        if allow_srid
           ewkt="SRID=#{@srid};"
         else
           ewkt=""

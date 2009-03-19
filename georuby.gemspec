@@ -5,9 +5,14 @@ Gem::Specification.new do |s|
   s.version = "1.3.3"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
-  s.authors = ["Guilhem Vellut", "Andrew Turner", "Kashif Rasul", "Shoaib Burq"]
+  s.authors = ["Guilhem Vellut"]
   s.date = %q{2009-03-19}
-  s.description = %q{GeoRuby is a holder for data returned from PostGIS and the Spatial Extensions of MySql which supports various input and output formats}
+  s.description = <<-EOS
+    GeoRuby is intended as a holder for data returned from PostGIS and MySQL Spatial queries. The data model roughly follows 
+    the OGC "Simple Features for SQL" specification (see www.opengis.org/docs/99-049.pdf), although without any kind of advanced 
+    functionalities (such as geometric operators or reprojections).
+  EOS
+  
   s.email = %q{guilhem.vellut@gmail.com}
   s.files = [
     "tools/shp2sql.rb", "tools/db.yml", "test/test_simple_features.rb", "test/test_shp_write.rb", "test/test_shp.rb", "test/test_georss_kml.rb", 
@@ -28,21 +33,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   s.rubyforge_project = %q{georuby}
   s.rubygems_version = %q{1.3.3}
-  s.summary = %q{GeoRuby is a holder for data returned from PostGIS and the Spatial Extensions of MySql which supports various input and output formats}
-
-  if s.respond_to? :specification_version then
-    current_version = Gem::Specification::CURRENT_SPECIFICATION_VERSION
-    s.specification_version = 2
-
-    if Gem::Version.new(Gem::RubyGemsVersion) >= Gem::Version.new('1.2.0') then
-      s.add_runtime_dependency(%q<mime-types>, [">= 1.15"])
-      s.add_runtime_dependency(%q<diff-lcs>, [">= 1.1.2"])
-    else
-      s.add_dependency(%q<mime-types>, [">= 1.15"])
-      s.add_dependency(%q<diff-lcs>, [">= 1.1.2"])
-    end
-  else
-    s.add_dependency(%q<mime-types>, [">= 1.15"])
-    s.add_dependency(%q<diff-lcs>, [">= 1.1.2"])
-  end
+  s.summary = %q{Ruby data holder for OGC Simple Features}
 end

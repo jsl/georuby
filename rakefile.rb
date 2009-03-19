@@ -1,7 +1,6 @@
 require 'rake'
 require 'rake/testtask'
 require 'rake/rdoctask'
-require 'rake/gempackagetask'
 
 task :default => :test
 
@@ -43,8 +42,3 @@ EOF
   s.rdoc_options.concat ['--main',  'README']
 end
 
-desc "Package the library as a gem"
-Rake::GemPackageTask.new(spec) do |pkg|
-  pkg.need_zip = true
-  pkg.need_tar = true
-end

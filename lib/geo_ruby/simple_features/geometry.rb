@@ -73,9 +73,7 @@ module GeoRuby#:nodoc:
 
       #Outputs the geometry as a HexEWKB string. It is almost the same as a WKB string, except that each byte of a WKB string is replaced by its hexadecimal 2-character representation in a HexEWKB string.
       def as_hex_ewkb(allow_srid=true,allow_z=true,allow_m=true)
-        str = ""
-        as_ewkb(allow_srid,allow_z,allow_m).each_byte {|char| str << sprintf("%02x",char).upcase}
-        str
+      	as_ewkb(allow_srid, allow_z, allow_m).unpack('H*').join('').upcase
       end
       #Outputs the geometry as a strict HexWKB string
       def as_hex_wkb
